@@ -2,20 +2,75 @@
   "version": 1,
   "active": true,
   "skill": "ultragoal",
-  "phase": "active",
-  "updated_at": "2026-11-10T08:09:45.233Z",
+  "phase": "blocked",
+  "updated_at": "2026-11-10T08:13:51.769Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "active_skills": [
     {
-      "skill": "ultragoal",
-      "phase": "active",
+      "skill": "ralplan",
+      "phase": "final",
       "active": true,
-      "activated_at": "2026-11-10T08:09:45.233Z",
-      "updated_at": "2026-11-10T08:09:45.233Z",
+      "activated_at": "2026-11-10T08:43:25.087Z",
+      "updated_at": "2026-11-10T08:43:25.087Z",
+      "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
+      "hud": {
+        "version": 1,
+        "summary": "persisted final stage 8",
+        "chips": [
+          {
+            "label": "pending",
+            "value": "approval",
+            "priority": 5,
+            "severity": "warning"
+          },
+          {
+            "label": "stage",
+            "value": "final",
+            "priority": 10
+          },
+          {
+            "label": "iter",
+            "value": "2",
+            "priority": 30
+          },
+          {
+            "label": "stages",
+            "value": "R·A·C·F",
+            "priority": 35
+          },
+          {
+            "label": "verdict",
+            "value": "OKAY",
+            "priority": 40,
+            "severity": "success"
+          },
+          {
+            "label": "handoff",
+            "value": "off→off",
+            "priority": 45
+          }
+        ],
+        "updated_at": "2026-11-10T08:43:25.086Z"
+      },
+      "source_state_revision": 10,
+      "state_revision": 10
+    },
+    {
+      "skill": "ultragoal",
+      "phase": "blocked",
+      "active": true,
+      "activated_at": "2026-11-10T08:13:51.769Z",
+      "updated_at": "2026-11-10T08:13:51.769Z",
       "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
       "hud": {
         "version": 1,
         "chips": [
+          {
+            "label": "blocked",
+            "value": "1",
+            "priority": 5,
+            "severity": "blocked"
+          },
           {
             "label": "goals",
             "value": "0/1",
@@ -23,21 +78,21 @@
           },
           {
             "label": "current",
-            "value": "G001:# R1 계획 (개정 3) — 달팽이 우체부: 캐릭터가 맵 위를 한 칸씩 움직인다",
+            "value": "blocked",
             "priority": 20
           },
           {
             "label": "status",
-            "value": "active",
+            "value": "blocked",
             "priority": 30
           },
           {
             "label": "ledger",
-            "value": "goal_started:G001",
+            "value": "critic_verdict",
             "priority": 35
           }
         ],
-        "updated_at": "2026-11-10T08:09:45.232Z"
+        "updated_at": "2026-11-10T08:13:51.768Z"
       },
       "receipt": {
         "version": 1,
@@ -46,20 +101,20 @@
         "command": "gjc ultragoal (reconcile)",
         "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
         "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-        "mutated_at": "2026-11-10T08:09:45.228Z",
-        "fresh_until": "2026-11-10T08:39:45.228Z",
+        "mutated_at": "2026-11-10T08:13:51.763Z",
+        "fresh_until": "2026-11-10T08:43:51.763Z",
         "status": "fresh",
-        "mutation_id": "ultragoal:reconcile:2026-11-10T08:09:45.228Z",
+        "mutation_id": "ultragoal:reconcile:2026-11-10T08:13:51.763Z",
         "verb": "reconcile",
         "forced": true,
-        "from_phase": "pending",
-        "to_phase": "active"
+        "from_phase": "blocked",
+        "to_phase": "blocked"
       },
-      "source_state_revision": 2,
-      "state_revision": 2
+      "source_state_revision": 9,
+      "state_revision": 7
     }
   ],
   "active_subskills": [],
-  "source_state_revision": 48,
-  "state_revision": 48
+  "source_state_revision": 63,
+  "state_revision": 63
 }

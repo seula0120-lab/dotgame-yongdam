@@ -1,10 +1,10 @@
 {
   "active": true,
   "version": 2,
-  "current_phase": "active",
+  "current_phase": "blocked",
   "skill": "ultragoal",
   "cwd": "/Users/seul/Desktop/dotgame-yongdam",
-  "updated_at": "2026-11-10T08:09:49.875Z",
+  "updated_at": "2026-11-10T08:13:51.763Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
@@ -13,39 +13,38 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-10T08:09:49.875Z",
-    "fresh_until": "2026-11-10T08:39:49.875Z",
+    "mutated_at": "2026-11-10T08:13:51.763Z",
+    "fresh_until": "2026-11-10T08:43:51.763Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-10T08:09:49.875Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-10T08:13:51.763Z",
     "verb": "reconcile",
-    "from_phase": "active",
-    "to_phase": "active",
+    "from_phase": "blocked",
+    "to_phase": "blocked",
     "forced": true,
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "6033d03ce1a88c6fa502fe20b385a0a76425523545bc283cdd5187184b8cb524",
+      "value": "36e466d2433e34bc589b1dd5867b4bbcd1359b6979802f07a3b752d5a3557a0d",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-      "computed_at": "2026-11-10T08:09:49.875Z"
+      "computed_at": "2026-11-10T08:13:51.763Z"
     }
   },
-  "status": "active",
+  "status": "blocked",
   "goals": [
     {
       "id": "G001",
       "title": "# R1 계획 (개정 3) — 달팽이 우체부: 캐릭터가 맵 위를 한 칸씩 움직인다",
-      "status": "active"
+      "status": "blocked"
     }
   ],
   "counts": {
     "pending": 0,
-    "active": 1,
+    "active": 0,
     "complete": 0,
     "failed": 0,
-    "blocked": 0,
+    "blocked": 1,
     "review_blocked": 0,
     "superseded": 0
   },
-  "active_goal_id": "G001",
   "ledger_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/ultragoal/ledger.jsonl",
   "brief_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/ultragoal/brief.md",
   "goals_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/ultragoal/goals.json",
@@ -56,9 +55,9 @@
   "nudge_goal_id": "G001",
   "nudge_target_kind": "story",
   "latestLedgerEvent": {
-    "event": "goal_started",
-    "goalId": "G001",
-    "timestamp": "2026-11-10T08:09:45.220Z"
+    "event": "critic_verdict",
+    "timestamp": "2026-11-10T08:13:51.753Z",
+    "evidence": "Critic 3-PauseCritic re-judged: only the AGENTS.md human browser check of R1-1..R1-5 remains; source unchanged since 7cf09f8, within R1, matches GAME_DESIGN.md 2.1.1."
   },
-  "state_revision": 4
+  "state_revision": 9
 }
