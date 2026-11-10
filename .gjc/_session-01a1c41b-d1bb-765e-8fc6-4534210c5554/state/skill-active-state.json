@@ -2,26 +2,20 @@
   "version": 1,
   "active": true,
   "skill": "ultragoal",
-  "phase": "blocked",
-  "updated_at": "2026-11-10T09:07:30.968Z",
+  "phase": "active",
+  "updated_at": "2026-11-10T09:53:39.630Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "active_skills": [
     {
       "skill": "ultragoal",
-      "phase": "blocked",
+      "phase": "active",
       "active": true,
-      "activated_at": "2026-11-10T09:07:30.968Z",
-      "updated_at": "2026-11-10T09:07:30.968Z",
+      "activated_at": "2026-11-10T09:53:39.630Z",
+      "updated_at": "2026-11-10T09:53:39.630Z",
       "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
       "hud": {
         "version": 1,
         "chips": [
-          {
-            "label": "blocked",
-            "value": "1",
-            "priority": 5,
-            "severity": "blocked"
-          },
           {
             "label": "goals",
             "value": "0/1",
@@ -29,21 +23,21 @@
           },
           {
             "label": "current",
-            "value": "blocked",
+            "value": "G001:# R1 계획 (개정 3) — 달팽이 우체부: 캐릭터가 맵 위를 한 칸씩 움직인다",
             "priority": 20
           },
           {
             "label": "status",
-            "value": "blocked",
+            "value": "active",
             "priority": 30
           },
           {
             "label": "ledger",
-            "value": "steering_accepted:annotate_ledger",
+            "value": "goal_checkpointed:G001",
             "priority": 35
           }
         ],
-        "updated_at": "2026-11-10T09:07:30.967Z"
+        "updated_at": "2026-11-10T09:53:39.629Z"
       },
       "receipt": {
         "version": 1,
@@ -52,20 +46,20 @@
         "command": "gjc ultragoal (reconcile)",
         "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
         "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-        "mutated_at": "2026-11-10T09:07:30.961Z",
-        "fresh_until": "2026-11-10T09:37:30.961Z",
+        "mutated_at": "2026-11-10T09:53:39.625Z",
+        "fresh_until": "2026-11-10T10:23:39.625Z",
         "status": "fresh",
-        "mutation_id": "ultragoal:reconcile:2026-11-10T09:07:30.961Z",
+        "mutation_id": "ultragoal:reconcile:2026-11-10T09:53:39.625Z",
         "verb": "reconcile",
         "forced": true,
         "from_phase": "blocked",
-        "to_phase": "blocked"
+        "to_phase": "active"
       },
-      "source_state_revision": 11,
-      "state_revision": 9
+      "source_state_revision": 12,
+      "state_revision": 10
     }
   ],
   "active_subskills": [],
-  "source_state_revision": 68,
-  "state_revision": 68
+  "source_state_revision": 70,
+  "state_revision": 70
 }
