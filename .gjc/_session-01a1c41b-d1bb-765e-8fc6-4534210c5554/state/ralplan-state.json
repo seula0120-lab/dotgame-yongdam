@@ -1,0 +1,54 @@
+{
+  "skill": "ralplan",
+  "active": false,
+  "current_phase": "complete",
+  "version": 2,
+  "mode": "short",
+  "interactive": false,
+  "task": "GAME_DESIGN.md v0와 AGENTS.md를 읽고 R1 계획을 세워라. goal은 하나: 맵 위에서 캐릭터가 한 칸씩 움직인다. 기획서에 없는 것은 계획에 넣지 마라. 코드는 아직 고치지 마라",
+  "run_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
+  "updated_at": "2026-11-10T07:47:41.863Z",
+  "repository_binding": {
+    "schema": "gjc.repository_binding.v1",
+    "worktreeRoot": "/Users/seul/Desktop/dotgame-yongdam",
+    "commonDir": "/Users/seul/Desktop/dotgame-yongdam/.git",
+    "displayPath": "/Users/seul/Desktop/dotgame-yongdam",
+    "head": "4d867978714f4fd884af539c6ede369c57e02801",
+    "branch": "main"
+  },
+  "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
+  "receipt": {
+    "version": 1,
+    "skill": "ralplan",
+    "owner": "gjc-state-cli",
+    "command": "gjc state ralplan clear",
+    "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
+    "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ralplan-state.json",
+    "mutated_at": "2026-11-10T07:47:41.863Z",
+    "fresh_until": "2026-11-10T08:17:41.863Z",
+    "status": "fresh",
+    "mutation_id": "ralplan:clear:2026-11-10T07:47:41.863Z",
+    "content_sha256": {
+      "algorithm": "sha256",
+      "value": "39a6cc56551afe4a9a7894b3225def407364021ca73225402b05b7336d91b6c5",
+      "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ralplan-state.json",
+      "computed_at": "2026-11-10T07:47:41.863Z"
+    }
+  },
+  "planner_subagent_id": "0-PlannerR1",
+  "planner_resumable": true,
+  "critic_id": "2-CriticR1",
+  "critic_resumable": true,
+  "last_review_verdict": "OKAY",
+  "last_review_verdict_lane": "critic",
+  "last_review_verdict_stage_n": 12,
+  "architect_id": "1-ArchR1",
+  "architect_resumable": true,
+  "auto_handoff": {
+    "configuredTarget": "off",
+    "effectiveTarget": "off",
+    "degradationReason": null,
+    "source": "default"
+  },
+  "state_revision": 1
+}
