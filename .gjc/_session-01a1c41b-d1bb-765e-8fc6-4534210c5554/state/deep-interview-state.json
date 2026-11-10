@@ -1,0 +1,440 @@
+{
+  "skill": "deep-interview",
+  "active": false,
+  "version": 2,
+  "current_phase": "complete",
+  "cwd": "/Users/seul/Desktop/dotgame-yongdam",
+  "updated_at": "2026-11-10T06:57:46.381Z",
+  "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
+  "threshold": 0.05,
+  "threshold_source": "default",
+  "receipt": {
+    "version": 1,
+    "skill": "deep-interview",
+    "owner": "gjc-state-cli",
+    "command": "gjc state deep-interview clear",
+    "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
+    "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/deep-interview-state.json",
+    "mutated_at": "2026-11-10T06:57:46.381Z",
+    "fresh_until": "2026-11-10T07:27:46.381Z",
+    "status": "fresh",
+    "mutation_id": "deep-interview:clear:2026-11-10T06:57:46.381Z",
+    "content_sha256": {
+      "algorithm": "sha256",
+      "value": "d41676897819dfc5a7a8db8ea259316e8aaa2b3e135e2e8d356e05c1e73bbcd2",
+      "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/deep-interview-state.json",
+      "computed_at": "2026-11-10T06:57:46.382Z"
+    }
+  },
+  "last_applied_draft_id": "83562b1d-343e-4604-99be-3316aacd6ab8",
+  "state": {
+    "threshold": 0.05,
+    "threshold_source": "default",
+    "rounds": [
+      {
+        "round_key": "snail-postman-001::r:0::q:topology",
+        "round": 0,
+        "question_id": "topology",
+        "question_text": "Round 0 | 위상 확인 | 모호도: 아직 채점 전\n\n최상위 구성 요소를 3개로 읽었습니다.\n1. 우체부 달팽이(플레이어): 화면 안에서 느리게 움직이며 편지를 나르는 조작 대상\n2. 편지 배달: 편지를 집고 목적지에 전달해, 전부 배달하면 승리하는 핵심 규칙\n3. 해 지기 타이머: 해가 지기 전이라는 시간 제한이며, 시간이 다 되면 패배\n\n확정된 의도(Locked intent):\n- Artifacts: 도트 게임 한 편(index.html + src/*.js), 기획서 GAME_DESIGN.md\n- Surfaces: 화면 하나짜리 Canvas 2D 도트 화면(키보드 조작 가정)\n- Integrations: 없음(서버·DB·계정·외부 에셋 금지)\n- Constraints: 의존성 0, 빌드 없음, 8색 팔레트, 모바일·설정·BGM·랜덤 맵 금지\n\n이 위상과 의도가 맞나요? 추가, 삭제, 합치기, 나누기, 보류할 항목이 있나요?",
+        "question_hash": "06245be3ce71d3845f4e5b2efe76a59d",
+        "answer_hash": "a993ae8684bc0366ea30161525ec8644cae13c84836f13edf13d8901929a268a",
+        "selected_options": [],
+        "component": "review-topology",
+        "dimension": "topology",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:29:06.510Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:0::q:topology2",
+        "round": 0,
+        "question_id": "topology2",
+        "question_text": "Round 0 | 위상 확인 | 모호도: 아직 채점 전\n\n위 표의 구성 요소 3개(우체부 달팽이 / 편지 배달 / 해 지기 타이머)와 확정 의도(도트 게임 한 편 + GAME_DESIGN.md, 화면 하나짜리 Canvas 2D, 외부 연동 없음, 의존성 0·8색·모바일/설정/BGM/랜덤 맵 금지)가 맞나요? 추가, 삭제, 합치기, 보류할 항목이 있나요?",
+        "question_hash": "6bc3bd6a812b43fb6b178e8d335e319c",
+        "answer_hash": "a993ae8684bc0366ea30161525ec8644cae13c84836f13edf13d8901929a268a",
+        "selected_options": [],
+        "component": "review-topology",
+        "dimension": "topology",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:32:43.695Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:0::q:topology3",
+        "round": 0,
+        "question_id": "topology3",
+        "question_text": "Round 0 | 위상 확인 (수정본) | 모호도: 아직 채점 전\n\n답변을 이렇게 정리했습니다.\n\n**Decision:** 구성 요소를 7개로 확장합니다.\n1. 우체부 달팽이(플레이어)\n2. 편지 배달(편지 집기, 우편함 전달, 전부 배달하면 승리)\n3. 해 지기 타이머(시간 초과 시 패배)\n4. 맵과 레벨(벽, 레벨 3개, 문자 격자)\n5. 승패와 화면\n6. 소리와 점수\n7. 팔레트(8색)\n\n**Reasoning/분위기:** 스타듀밸리 같은 탑다운 농장 마을. 흙길, 잔디, 붉은 지붕 집, 울타리, 우편함이 있는 따뜻한 8색 도트. 우편함이 배달 목적지.\n\n**Constraints (AGENTS.md 근거):** 의존성 0, 빌드 없음, 8색 팔레트, 화면 하나, 모바일·설정·난이도·리더보드·BGM·랜덤 맵·레벨 에디터 금지.\n\n**확인 필요한 충돌 하나:** AGENTS.md는 'BGM 금지'이므로 '소리와 점수'는 효과음과 점수 표시만 포함하는 것으로 읽었습니다(BGM 제외). 점수는 레벨 클리어 기록용으로만 쓰고 리더보드는 쓰지 않습니다.\n\n이 해석이 맞나요?",
+        "question_hash": "c50ed089792c78ab70e955faa8e08e98",
+        "answer_hash": "34decd8c499ec4508ac9d0d287933906dff73614f9c9994c7aea80707d526606",
+        "selected_options": [
+          "맞습니다"
+        ],
+        "component": "review-topology",
+        "dimension": "topology",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:34:29.853Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:1::q:r1-delivery-goal",
+        "round": 1,
+        "question_id": "r1-delivery-goal",
+        "question_text": "Round 1 | Component: 편지 배달 | Targeting: Goal | Why now: 집기와 전달 규칙이 정해져야 맵, 타이머, 승패를 모두 정할 수 있습니다 | Ambiguity: 100%\n\n달팽이는 편지를 어떻게 집고 어떻게 전달하나요? 플레이어가 실제로 하는 행동을 기준으로 골라 주세요.",
+        "question_hash": "2c3905d3571836f60d1b9ec56bd2aa8c",
+        "answer_hash": "8ebc33a88f869db5101f35decf0b5751b82fb70179325f436eb178714433c85a",
+        "selected_options": [],
+        "custom_input": "편지는 줍지 않고 밀어서 옮긴다. 달팽이가 편지 칸으로 이동하면 편지가 한 칸 밀리고, 뒤에 벽·울타리·다른 편지가 있으면 밀리지 않는다. 당기기 없음. 편지를 집 앞 지정 칸(우편함)으로 밀어 넣으면 배달 완료. 전부 배달하면 레벨 클리어. 막힌 경우를 위해 R키로 레벨 다시 시작. 되돌리기 없음.\n",
+        "component": "delivery",
+        "dimension": "goal",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:36:26.245Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:1::q:r1-refine",
+        "round": 1,
+        "question_id": "r1-refine",
+        "question_text": "답변을 아래처럼 정리했습니다. 빠진 것이나 잘못 읽은 것이 있는지 확인해 주세요.\n\n**Decision:** 편지는 줍지 않고 밀어서 옮긴다(소코반식). 달팽이가 편지 칸으로 이동하면 편지가 한 칸 밀린다. 편지를 집 앞 지정 칸(우편함)으로 밀어 넣으면 배달 완료이고, 전부 배달하면 레벨 클리어다.\n**Constraints (user-stated):** 뒤에 벽, 울타리, 또는 다른 편지가 있으면 밀리지 않는다. 당기기 없음. 되돌리기 없음. 막혔을 때는 R키로 레벨을 다시 시작한다.\n**Out of scope (user-stated):** 줍기, 당기기, 되돌리기(undo).\n**Codebase context (verified):** 기획서와 코드는 아직 없는 그린필드다(AGENTS.md만 있음).\n\n이 해석이 맞나요?",
+        "question_hash": "d0cb45b2a6d4e25b4b25777c067d3b0a",
+        "answer_hash": "f1002969e6c0837433c0bf84df70aef280234e3bec034dd078223fae63206f50",
+        "selected_options": [],
+        "custom_input": "R0는 v0 범위만 정한다: 1장 한 줄 콘셉트, 2장 이동 규칙(한 칸 이동 시간, 타일 크기, 화면 크기), 10장 범위 밖. 맵·레벨·소리·점수·팔레트의 세부는 R1~R3에서 정한다. 지금은 이동 규칙 숫자를 먼저 묻는다.\n",
+        "component": "delivery",
+        "dimension": "goal",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:40:01.632Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:1::q:r1-move-time",
+        "round": 1,
+        "question_id": "r1-move-time",
+        "question_text": "Round 1 | Component: 우체부 달팽이 | Targeting: Constraints | Why now: 한 칸 이동 시간이 정해져야 타이머와 레벨 크기를 숫자로 맞출 수 있습니다 | Ambiguity: 100%\n\n달팽이가 한 칸 이동하는 데 걸리는 시간은 얼마인가요? (키를 누른 상태로 다음 칸까지 이동하는 시간입니다. 편지를 밀 때도 동일합니다.)",
+        "question_hash": "ff2ced0193c848f704c146e69cd80453",
+        "answer_hash": "3af73aecc6da14246d489f74bde16cd55ae6c7d2340cfc388b905bae40b34363",
+        "selected_options": [
+          "0.60초 (확실히 느림, 타이머 압박 큼)"
+        ],
+        "component": "snail",
+        "dimension": "constraints",
+        "ambiguity_at_ask": 1,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:40:47.208Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:2::q:r1-tile-size",
+        "round": 2,
+        "question_id": "r1-tile-size",
+        "question_text": "Round 2 | Component: 맵과 레벨 | Targeting: Constraints | Why now: 한 칸 이동 0.60초가 정해졌으니 타일 크기와 화면 크기를 정해야 레벨 격자 크기가 나옵니다 | Ambiguity: 90%\n\n타일 한 칸의 크기와 그에 따른 화면 크기(격자 칸 수 × 타일 크기)는 어떻게 할까요? 스프라이트는 타일 안에 픽셀 단위로 그립니다(확대 표시 배율은 더 크게 맞출 수 있음).",
+        "question_hash": "a97e39a57f8b6825f707d4437f89c107",
+        "answer_hash": "ab08c669542b857a64f5e29f898703221e918e1114a583e4cbd2bab2ca2f110b",
+        "selected_options": [
+          "16×16 픽셀 타일, 16×12 칸 (논리 256×192, 3배 확대 768×576)"
+        ],
+        "component": "map-levels",
+        "dimension": "constraints",
+        "ambiguity_at_ask": 0.9,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:42:56.454Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:3::q:r3-out-of-scope",
+        "round": 3,
+        "question_id": "r3-out-of-scope",
+        "question_text": "Round 3 | Component: 승패와 화면 | Targeting: Constraints | Why now: R0 범위의 마지막 항목인 10장(범위 밖)을 확정해야 기획서 초안을 마무리할 수 있습니다 | Ambiguity: 80%\n\nAGENTS.md의 금지 항목을 10장으로 옮기고, 방금 확정한 규칙에서 나온 항목만 더하면 됩니다. 범위 밖: 모바일 터치, 반응형 레이아웃, 설정 화면, 난이도 선택, 리더보드, 계정, 서버, DB, 배경음악, 레벨 에디터, 랜덤 맵. 추가 후보: 편지 줍기, 당기기, 되돌리기(undo), 일시정지, 저장/이어하기. 이 목록에 빠진 것이나 빼야 할 것이 있나요?",
+        "question_hash": "6c9e294c737214c0b371755a17f494ff",
+        "answer_hash": "54c9c8e0b8de653c86a4977d5449e87f7ed8a03963f96cffcaa2dbf935f04678",
+        "selected_options": [],
+        "custom_input": "이 목록 그대로 확정. 추가로 범위 밖: 레벨 4 이상, 언어 선택, 외부 오디오·이미지 파일(도트 웹폰트 1개만 예외), 빌드 도구·번들러·npm 패키지.\n",
+        "component": "win-lose-screens",
+        "dimension": "constraints",
+        "ambiguity_at_ask": 0.8,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:47:44.810Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:4::q:r4-timer",
+        "round": 4,
+        "question_id": "r4-timer",
+        "question_text": "Round 4 | Component: 해 지기 타이머 | Targeting: Constraints | Why now: 시간 제한이 컨셉트의 핵심인데 아직 숫자가 없고 가장 낮은 점수(제약 0.3)입니다 | Ambiguity: 52%\n\n해가 지는 시간은 어떻게 정해지나요? 한 칸 0.60초라 레벨마다 필요한 칸 수가 다릅니다.",
+        "question_hash": "410d8b48bb6c9dcabb3681e4ba2b4111",
+        "answer_hash": "d07e2f1116906ccf482c7f26109a08d2ffed1bf35b4ed865852860b93bbafeb9",
+        "selected_options": [
+          "레벨마다 다른 고정 시간 (레벨 문자 격자 옆에 숫자로 적음)"
+        ],
+        "component": "sunset-timer",
+        "dimension": "constraints",
+        "ambiguity_at_ask": 0.52,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:53:27.136Z"
+      },
+      {
+        "round_key": "snail-postman-001::r:5::q:restate",
+        "round": 5,
+        "question_id": "restate",
+        "question_text": "한 줄 목표: \"달팽이 우체부가 한 칸 0.60초로 느리게 움직이며 편지를 줍지 않고 밀어서(당기기·되돌리기 없이) 우편함에 넣고, 레벨마다 정해진 제한 시간(해가 지기 전) 안에 편지를 모두 배달하면 클리어하는, 16×16 타일·16×12칸(768×576) 화면 하나짜리 도트 게임. 맵·레벨 3개·승패 화면·소리·점수·팔레트 세부는 R1~R3에서 정한다.\"\n\n이 한 줄만 읽었을 때 당신이 생각하는 결과와 같은 결과가 나오나요? (R0 범위는 1장 콘셉트·2장 이동 규칙·10장 범위 밖이고, 나머지 세부는 사용자가 R1~R3로 보류했습니다.)",
+        "question_hash": "bb61f523a2d2a5be6010d26cce8b7618",
+        "answer_hash": "f7e2e045c247f456a0dc973c68f364499366e953e5a5e7c95e8931b39b44c5dd",
+        "selected_options": [
+          "Yes, crystallize"
+        ],
+        "component": "restate",
+        "dimension": "goal",
+        "ambiguity_at_ask": 0.5,
+        "lifecycle": "answered",
+        "answered_at": "2026-11-10T06:54:57.485Z"
+      }
+    ],
+    "established_facts": [
+      {
+        "id": "f1",
+        "statement": "편지는 줍지 않고 밀어서 옮긴다(소코반식). 벽·울타리·다른 편지 뒤면 밀리지 않음. 당기기·되돌리기 없음. R키로 레벨 재시작.",
+        "round": 1,
+        "disputed": false
+      },
+      {
+        "id": "f2",
+        "statement": "편지를 우편함 칸으로 밀어 넣으면 배달 완료, 전부 배달하면 레벨 클리어",
+        "round": 1,
+        "disputed": false
+      },
+      {
+        "id": "f3",
+        "statement": "한 칸 이동 시간 0.60초(편지를 밀 때도 동일)",
+        "round": 1,
+        "disputed": false
+      },
+      {
+        "id": "f4",
+        "statement": "타일 16x16px, 16x12칸, 논리 256x192, 3배 확대 768x576",
+        "round": 2,
+        "disputed": false
+      },
+      {
+        "id": "f5",
+        "statement": "R0 범위: 1장 콘셉트, 2장 이동 규칙, 10장 범위 밖. 맵·레벨·소리·점수·팔레트 세부는 R1~R3에서 결정",
+        "round": 1,
+        "disputed": false
+      },
+      {
+        "id": "f6",
+        "statement": "범위 밖: 모바일 터치, 반응형, 설정 화면, 난이도 선택, 리더보드, 계정, 서버, DB, 배경음악, 레벨 에디터, 랜덤 맵, 편지 줍기, 당기기, 되돌리기, 일시정지, 저장/이어하기, 레벨 4 이상, 언어 선택, 외부 오디오·이미지 파일(도트 웹폰트 1개 예외), 빌드 도구·번들러·npm",
+        "round": 3,
+        "disputed": false
+      }
+    ],
+    "interview_id": "snail-postman-001",
+    "type": "greenfield",
+    "initial_idea": "달팽이 우체부가 해가 지기 전에 편지를 다 배달한다 (화면 하나짜리 도트 게임, AGENTS.md 기준)",
+    "topology": {
+      "status": "confirmed",
+      "confirmed_at": "2026-11-10T06:25:00.000Z",
+      "components": [
+        {
+          "id": "snail",
+          "name": "우체부 달팽이",
+          "description": "플레이어 조작 대상",
+          "status": "active",
+          "evidence": [
+            "initial prompt"
+          ],
+          "clarity_scores": {
+            "goal": 0.9,
+            "constraints": 0.9,
+            "criteria": 0.7,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        },
+        {
+          "id": "delivery",
+          "name": "편지 배달",
+          "description": "밀어서 우편함에 넣으면 배달, 전부 배달하면 클리어",
+          "status": "active",
+          "evidence": [
+            "round1"
+          ],
+          "clarity_scores": {
+            "goal": 0.9,
+            "constraints": 0.85,
+            "criteria": 0.7,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        },
+        {
+          "id": "sunset-timer",
+          "name": "해 지기 타이머",
+          "description": "시간 초과 시 패배",
+          "status": "active",
+          "evidence": [
+            "initial prompt"
+          ],
+          "clarity_scores": {
+            "goal": 0.6,
+            "constraints": 0.3,
+            "criteria": 0.3,
+            "context": 0.9
+          },
+          "weakest_dimension": "constraints"
+        },
+        {
+          "id": "map-levels",
+          "name": "맵과 레벨",
+          "description": "벽, 레벨 3개, 문자 격자",
+          "status": "active",
+          "evidence": [
+            "user round0"
+          ],
+          "clarity_scores": {
+            "goal": 0.7,
+            "constraints": 0.85,
+            "criteria": 0.4,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        },
+        {
+          "id": "win-lose-screens",
+          "name": "승패와 화면",
+          "description": "승리/패배 화면",
+          "status": "active",
+          "evidence": [
+            "user round0"
+          ],
+          "clarity_scores": {
+            "goal": 0.5,
+            "constraints": 0.85,
+            "criteria": 0.3,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        },
+        {
+          "id": "sound-score",
+          "name": "소리와 점수",
+          "description": "효과음과 점수(BGM 제외)",
+          "status": "active",
+          "evidence": [
+            "user round0"
+          ],
+          "clarity_scores": {
+            "goal": 0.4,
+            "constraints": 0.7,
+            "criteria": 0.2,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        },
+        {
+          "id": "palette",
+          "name": "팔레트",
+          "description": "8색, 스타듀밸리풍",
+          "status": "active",
+          "evidence": [
+            "user round0"
+          ],
+          "clarity_scores": {
+            "goal": 0.6,
+            "constraints": 0.7,
+            "criteria": 0.3,
+            "context": 0.9
+          },
+          "weakest_dimension": "criteria"
+        }
+      ],
+      "deferrals": [],
+      "last_targeted_component_id": "win-lose-screens"
+    },
+    "ontology_snapshots": [],
+    "auto_answered_rounds": [],
+    "lateral_reviews": [],
+    "lateral_panel_failures": 0,
+    "auto_answer_streak": 0,
+    "refined_rounds": [
+      1
+    ],
+    "closure_overrides": [],
+    "ambiguity_milestone": "progress",
+    "architect_failures": 0,
+    "ambiguity_floor": {
+      "floor": 0,
+      "disputed_fact_count": 0,
+      "unscored_active_component_count": 0,
+      "auto_answer_ratio": 0
+    },
+    "intent_contract": {
+      "version": 1,
+      "items": [
+        {
+          "id": "artifact:design-doc",
+          "category": "artifact",
+          "statement": "기획서 GAME_DESIGN.md"
+        },
+        {
+          "id": "artifact:game",
+          "category": "artifact",
+          "statement": "도트 게임 한 편(index.html + src/*.js)"
+        },
+        {
+          "id": "constraint:no-extras",
+          "category": "constraint",
+          "statement": "모바일, 설정, 난이도, 리더보드, BGM, 랜덤 맵, 레벨 에디터 금지"
+        },
+        {
+          "id": "constraint:palette",
+          "category": "constraint",
+          "statement": "8색 팔레트, 따뜻한 스타듀밸리풍 분위기"
+        },
+        {
+          "id": "constraint:zero-deps",
+          "category": "constraint",
+          "statement": "의존성 0, 빌드 없음"
+        },
+        {
+          "id": "integration:mailbox",
+          "category": "integration",
+          "statement": "우편함이 배달 목적지"
+        },
+        {
+          "id": "surface:levels",
+          "category": "surface",
+          "statement": "맵과 레벨 3개(벽 포함, 문자 격자)"
+        },
+        {
+          "id": "surface:single-screen",
+          "category": "surface",
+          "statement": "화면 하나짜리 탑다운 농장 마을 Canvas 2D 도트 화면"
+        },
+        {
+          "id": "surface:sound-score",
+          "category": "surface",
+          "statement": "효과음과 점수(BGM 제외)"
+        },
+        {
+          "id": "surface:win-lose",
+          "category": "surface",
+          "statement": "승패와 화면"
+        }
+      ],
+      "digest": "11e5fe7229ad5c979bf927cbcac246d567862d9f88e3d69007b75fec5b8d86dc",
+      "confirmation_round": 0,
+      "confirmation_answer_hash": "34decd8c499ec4508ac9d0d287933906dff73614f9c9994c7aea80707d526606",
+      "confirmation_evidence": "answer_hash:34decd8c499ec4508ac9d0d287933906dff73614f9c9994c7aea80707d526606"
+    },
+    "intent_review": {
+      "status": "not_required",
+      "supporting_substitutions": [],
+      "version": 1,
+      "locked_digest": "11e5fe7229ad5c979bf927cbcac246d567862d9f88e3d69007b75fec5b8d86dc",
+      "observed_digest": "9c95b15bc8007f6f4dc6e61a197311aaaaa6decc37826a78a5e167f5d04f7545",
+      "removed_locked_ids": []
+    }
+  },
+  "spec_slug": "snail-postman-r0",
+  "spec_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/specs/deep-interview-snail-postman-r0.md",
+  "spec_sha256": "0ad28942648035763b3c452797d14569c51a42c009ca3b95bbc811860c12657f",
+  "spec_stage": "final",
+  "spec_persisted_at": "2026-11-10T06:55:20.298Z",
+  "state_revision": 16
+}
