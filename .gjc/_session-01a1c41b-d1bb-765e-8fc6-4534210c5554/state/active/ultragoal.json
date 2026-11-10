@@ -2,8 +2,8 @@
   "skill": "ultragoal",
   "phase": "blocked",
   "active": true,
-  "activated_at": "2026-11-10T08:13:51.769Z",
-  "updated_at": "2026-11-10T08:13:51.769Z",
+  "activated_at": "2026-11-10T09:07:30.968Z",
+  "updated_at": "2026-11-10T09:07:30.968Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "hud": {
     "version": 1,
@@ -31,11 +31,11 @@
       },
       {
         "label": "ledger",
-        "value": "critic_verdict",
+        "value": "steering_accepted:annotate_ledger",
         "priority": 35
       }
     ],
-    "updated_at": "2026-11-10T08:13:51.768Z"
+    "updated_at": "2026-11-10T09:07:30.967Z"
   },
   "receipt": {
     "version": 1,
@@ -44,15 +44,15 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-10T08:13:51.763Z",
-    "fresh_until": "2026-11-10T08:43:51.763Z",
+    "mutated_at": "2026-11-10T09:07:30.961Z",
+    "fresh_until": "2026-11-10T09:37:30.961Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-10T08:13:51.763Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-10T09:07:30.961Z",
     "verb": "reconcile",
     "forced": true,
     "from_phase": "blocked",
     "to_phase": "blocked"
   },
-  "source_state_revision": 9,
-  "state_revision": 7
+  "source_state_revision": 11,
+  "state_revision": 9
 }
