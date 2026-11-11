@@ -3,9 +3,9 @@
 const MASTER_GAIN = 0.2;
 const RAMP_S = 0.005;
 
-// freqs의 각 음을 ms 길이로 이어서 낸다.
+// freqs의 각 음을 ms 길이로 이어서 낸다. sweepTo가 있으면 음 하나가 그 주파수까지 내려가거나 올라간다.
 export const SOUNDS = {
-  push: { type: "sine", freqs: [220], ms: 50 },
+  push: { type: "sine", freqs: [110], sweepTo: 55, ms: 40 },
   deliver: { type: "sine", freqs: [660, 880], ms: 80 },
   clear: { type: "triangle", freqs: [523, 659, 784], ms: 120 },
   final: { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 },
@@ -48,6 +48,7 @@ export function createAudio(AudioContextCtor) {
         const gain = ctx.createGain();
         osc.type = spec.type;
         osc.frequency.value = freq;
+        if (spec.sweepTo) osc.frequency.exponentialRampToValueAtTime(spec.sweepTo, t0 + dur);
         gain.gain.setValueAtTime(0, t0);
         gain.gain.linearRampToValueAtTime(1, t0 + RAMP_S);
         gain.gain.setValueAtTime(1, t0 + dur - RAMP_S);

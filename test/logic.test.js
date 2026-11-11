@@ -643,7 +643,7 @@ function fakeAudioCtor(state = "running") {
       return { gain: { value: 1, setValueAtTime() {}, linearRampToValueAtTime() {} }, connect() {} };
     }
     createOscillator() {
-      const o = { type: "", frequency: { value: 0 }, connect() {}, start(t) { o.t = t; }, stop() {} };
+      const o = { type: "", frequency: { value: 0, exponentialRampToValueAtTime(f, t) { o.sweep = [f, t]; } }, connect() {}, start(t) { o.t = t; }, stop() {} };
       log.oscillators.push(o);
       return o;
     }
@@ -652,7 +652,7 @@ function fakeAudioCtor(state = "running") {
 }
 
 test("효과음 합성값은 7장 표 그대로 (R3-13)", () => {
-  assert.deepEqual(SOUNDS.push, { type: "sine", freqs: [220], ms: 50 });
+  assert.deepEqual(SOUNDS.push, { type: "sine", freqs: [110], sweepTo: 55, ms: 40 });
   assert.deepEqual(SOUNDS.deliver, { type: "sine", freqs: [660, 880], ms: 80 });
   assert.deepEqual(SOUNDS.clear, { type: "triangle", freqs: [523, 659, 784], ms: 120 });
   assert.deepEqual(SOUNDS.final, { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 });
@@ -702,4 +702,16 @@ test("문구: 점수와 최고 글자 글리프, 한글 글리프는 21자 (7장
     }
     assert.ok(g.flat().some((v) => v === 7), c);
   }
+});
+
+test("밀기 소리는 110Hz에서 55Hz로 40ms 내려가는 사인파 하나 (7장)", () => {
+  const { Ctx, log } = fakeAudioCtor();
+  const audio = createAudio(Ctx);
+  audio.unlock();
+  audio.play("push");
+  assert.equal(log.oscillators.length, 1);
+  const o = log.oscillators[0];
+  assert.equal(o.type, "sine");
+  assert.equal(o.frequency.value, 110);
+  assert.deepEqual(o.sweep, [55, 10.04]);
 });
