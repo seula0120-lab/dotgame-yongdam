@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LEVEL_1 } from "../src/levels.js";
-import { PALETTE, FLOOR, WALL, FENCE, SNAIL } from "../src/sprites.js";
+import { LEVEL_1, LEVEL_1_TIME_MS } from "../src/levels.js";
+import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS } from "../src/sprites.js";
 import {
   TILE,
   COLS,
@@ -12,6 +12,8 @@ import {
   tick,
   keyToDir,
   renderPos,
+  letterPositions,
+  timerDisplay,
 } from "../src/logic.js";
 
 // 기대값은 GAME_DESIGN.md 숫자: 0.60초/칸, 16x16 타일, 16x12칸, 256x192, 768x576.
@@ -125,11 +127,145 @@ test("WASD는 같은 방향의 방향키와 같다 (R1-1)", () => {
 
 test("스프라이트는 16x16이고 색은 6장 8색 인덱스뿐 (R1-4, R1-5)", () => {
   assert.equal(PALETTE.length, 8);
-  for (const sp of [FLOOR, WALL, FENCE, SNAIL]) {
+  for (const sp of [FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX]) {
     assert.equal(sp.length, TILE);
     for (const row of sp) {
       assert.equal(row.length, TILE);
       for (const idx of row) assert.ok(idx >= -1 && idx <= 7 && Number.isInteger(idx));
+    }
+  }
+});
+
+// ---- R2 goal-2: 기대값은 GAME_DESIGN.md v4 (2.2, 5장 레벨 1, 9장 R2-1~R2-9) ----
+
+const L1 = parseLevel(LEVEL_1, LEVEL_1_TIME_MS);
+
+function press(s, level, dir) {
+  s = tick(s, level, [dir], 0);
+  return run(s, level, 600, 100);
+}
+function presses(s, level, dirs) {
+  for (const d of dirs) s = press(s, level, d);
+  return s;
+}
+
+test("레벨 1: 편지 2개, 우편함 1개, 시작 (4,4), 제한 시간 30초 (5장, R2-1)", () => {
+  assert.deepEqual(L1.letters, [{ x: 7, y: 4 }, { x: 12, y: 6 }]);
+  assert.deepEqual(L1.start, { x: 4, y: 4 });
+  const boxes = [];
+  L1.rows.forEach((r, y) => [...r].forEach((c, x) => c === "M" && boxes.push({ x, y })));
+  assert.deepEqual(boxes, [{ x: 12, y: 4 }]);
+  assert.equal(L1.timeLimitMs, 30000);
+  assert.equal(createState(L1).remainingMs, 30000);
+});
+
+test("편지를 밀면 달팽이와 편지가 함께 한 칸, 0.60초 (R2-2)", () => {
+  const lv = parseLevel(["S.L..."]);
+  let s = tick(createState(lv), lv, ["right"], 0); // 이동 시작: 달팽이 (0,0)->(1,0) 이건 빈 칸
+  s = run(s, lv, 600, 100);
+  s = tick(s, lv, ["right"], 0); // (1,0)->(2,0) 편지 밀림
+  s = run(s, lv, 300, 100);
+  assert.deepEqual(renderPos(s), { x: 1.5, y: 0 });
+  assert.deepEqual(letterPositions(s)[0], { x: 2.5, y: 0 });
+  assert.deepEqual(s.letters[0], { x: 2, y: 0 }); // 완료 전에는 확정 안 됨 (D17)
+  s = run(s, lv, 300, 100);
+  assert.deepEqual(s.pos, { x: 2, y: 0 });
+  assert.deepEqual(s.letters[0], { x: 3, y: 0 });
+});
+
+test("편지 뒤가 벽, 울타리, 다른 편지, 가장자리면 모두 정지 (R2-3)", () => {
+  for (const back of ["#", "F", "L"]) {
+    const lv = parseLevel(["SL" + back]);
+    const s = tick(createState(lv), lv, ["right"], 0);
+    assert.equal(s.move, null, back);
+  }
+  const edge = parseLevel(["SL"]);
+  assert.equal(tick(createState(edge), edge, ["right"], 0).move, null);
+});
+
+test("달팽이는 우편함 칸으로 들어갈 수 없다 (R2-3)", () => {
+  const lv = parseLevel(["SM"]);
+  assert.equal(tick(createState(lv), lv, ["right"], 0).move, null);
+});
+
+test("편지를 우편함으로 밀어 이동이 끝나야 사라지고 배달된다 (R2-4)", () => {
+  const lv = parseLevel(["SLML"], 30000);
+  let s = tick(createState(lv), lv, ["right"], 0);
+  s = run(s, lv, 500, 100);
+  assert.equal(s.letters.length, 2);
+  assert.equal(s.delivered, 0);
+  s = run(s, lv, 100, 100);
+  assert.equal(s.letters.length, 1);
+  assert.equal(s.delivered, 1);
+  assert.equal(s.status, "playing");
+});
+
+test("편지는 따라오지 않는다: 반대쪽으로 가도 위치 불변 (R2-5)", () => {
+  const lv = parseLevel([".SL.."]);
+  const s = press(createState(lv), lv, "left");
+  assert.deepEqual(s.letters[0], { x: 2, y: 0 });
+});
+
+test("타이머: 올림 표시, 100ms 상한 시계 (R2-6, 2.2)", () => {
+  let s = createState(L1);
+  assert.equal(timerDisplay(s), 30);
+  s = tick(s, L1, [], 100);
+  assert.equal(timerDisplay(s), 30); // 29.9초 -> 올림 30
+  s = run(s, L1, 900, 100);
+  assert.equal(s.remainingMs, 29000);
+  assert.equal(timerDisplay(s), 29);
+  s = tick(s, L1, [], 5000); // 큰 dt는 100ms만
+  assert.equal(s.remainingMs, 28900);
+});
+
+test("시간 0이면 입력이 멈추고 0을 보인다. 이동 중이면 폐기, 편지 미배달 (R2-7, D21)", () => {
+  const lv = parseLevel(["SLM"], 300);
+  let s = tick(createState(lv), lv, ["right"], 0);
+  s = run(s, lv, 300, 100);
+  assert.equal(s.status, "lost");
+  assert.equal(s.move, null);
+  assert.equal(s.delivered, 0);
+  assert.equal(timerDisplay(s), 0);
+  assert.deepEqual(s.pos, { x: 0, y: 0 });
+  assert.equal(tick(s, lv, ["right"], 100), s);
+});
+
+test("마지막 편지 배달과 시간 0이 같은 프레임이면 클리어 (2.2)", () => {
+  const lv = parseLevel(["SLM"], 600);
+  let s = tick(createState(lv), lv, ["right"], 0);
+  s = run(s, lv, 500, 100);
+  s = tick(s, lv, [], 100); // 완료 프레임, 잔여 100ms -> 감소 전에 클리어
+  assert.equal(s.status, "won");
+  assert.equal(s.delivered, 1);
+});
+
+test("클리어 후에는 상태가 바뀌지 않는다 (2.2)", () => {
+  const lv = parseLevel(["SLM."], 30000);
+  let s = press(createState(lv), lv, "right");
+  assert.equal(s.status, "won");
+  const t = tick(s, lv, ["left"], 100);
+  assert.equal(t, s);
+  assert.equal(s.remainingMs, 30000 - 500); // 클리어 프레임에는 감소하지 않는다 (D18)
+});
+
+test("풀이 재생: →×7 ↓×3 →×1 ↑×2 가 13칸 7.8초에 편지 2개를 배달해 클리어 (5장)", () => {
+  const dirs = [..."r".repeat(7), ..."d".repeat(3), "r", "u", "u"].map(
+    (c) => ({ r: "right", d: "down", u: "up" })[c],
+  );
+  assert.equal(dirs.length, 13);
+  const s = presses(createState(L1), L1, dirs);
+  assert.equal(s.status, "won");
+  assert.equal(s.delivered, 2);
+  assert.equal(s.remainingMs, 30000 - (13 * 600 - 100)); // 클리어 프레임은 감소 없음
+});
+
+test("숫자 글리프 0~9는 6x12이고 색은 글자색 7뿐 (6장 R2, R2-8)", () => {
+  assert.equal(DIGITS.length, 10);
+  for (const g of DIGITS) {
+    assert.equal(g.length, 12);
+    for (const row of g) {
+      assert.equal(row.length, 6);
+      for (const idx of row) assert.ok(idx === -1 || idx === 7);
     }
   }
 });
