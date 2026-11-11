@@ -6,6 +6,8 @@ export const ROWS = 12;
 export const SCALE = 3;
 export const MOVE_MS = 600;
 export const DT_CAP_MS = 100;
+// 레벨은 3개뿐이다 (5장). 마지막 레벨 클리어가 최종 화면이다 (3장).
+export const LEVEL_COUNT = 3;
 
 // 위, 아래, 왼쪽, 오른쪽 순서가 동시 입력 우선순위다 (2.1.1).
 export const DIR_ORDER = ["up", "down", "left", "right"];
@@ -62,9 +64,11 @@ export function isWalkable(level, x, y) {
 }
 
 // levelIndex: 0부터 시작하는 레벨 번호 (5장 레벨 1, 2, 3).
-export function createState(level, levelIndex = 0) {
+// score: 이 레벨을 시작할 때까지 받은 누적 점수 (2.2 점수).
+export function createState(level, levelIndex = 0, score = 0) {
   return {
     levelIndex,
+    score,
     pos: { ...level.start },
     move: null,
     letters: level.letters.map((l) => ({ ...l })),
@@ -83,34 +87,28 @@ export function createTitleState(level) {
 // 화면은 저장하지 않고 상태에서 정한다 (3장).
 export function screenOf(state) {
   if (!state.started) return "title";
-  if (state.status === "won") return "clear";
+  if (state.status === "won") return state.levelIndex === LEVEL_COUNT - 1 ? "final" : "clear";
   if (state.status === "lost") return "fail";
   return "play";
 }
 
-// 마지막 레벨의 클리어인가. levels는 파싱된 레벨 배열.
-function isLastLevel(state, levels) {
-  return state.levelIndex === levels.length - 1;
-}
-
-// Enter (3장): 타이틀에서는 레벨 1 시작, 클리어(레벨 1·2)에서는 다음 레벨 시작.
+// Enter (3장): 타이틀에서는 레벨 1 시작(점수 0), 클리어(레벨 1·2)에서는 다음 레벨 시작(점수 유지).
 // 그 밖의 화면에서는 아무 일도 없다(같은 객체를 돌려준다).
 export function startGame(state, levels) {
-  if (!state.started) return createState(levels[0], 0);
-  if (state.status === "won" && !isLastLevel(state, levels)) {
-    return createState(levels[state.levelIndex + 1], state.levelIndex + 1);
+  if (!state.started) return createState(levels[0], 0, 0);
+  if (screenOf(state) === "clear") {
+    return createState(levels[state.levelIndex + 1], state.levelIndex + 1, state.score);
   }
   return state;
 }
 
 // R (3장): 타이틀과 클리어(레벨 1·2)에서는 아무 일도 없다(같은 객체).
-// 플레이와 실패에서는 지금 레벨을 처음 상태로. 마지막 레벨 클리어(goal-4 임시)에서는 레벨 1부터.
+// 플레이와 실패에서는 지금 레벨을 처음 상태로, 점수 유지. 최종 화면에서는 새 판(레벨 1, 점수 0).
 export function restart(state, levels) {
-  if (!state.started) return state;
-  if (state.status === "won") {
-    return isLastLevel(state, levels) ? createState(levels[0], 0) : state;
-  }
-  return createState(levels[state.levelIndex], state.levelIndex);
+  const screen = screenOf(state);
+  if (screen === "title" || screen === "clear") return state;
+  if (screen === "final") return createState(levels[0], 0, 0);
+  return createState(levels[state.levelIndex], state.levelIndex, state.score);
 }
 
 function letterIndexAt(state, x, y) {
@@ -167,7 +165,10 @@ export function tick(state, level, pressed, dtMs) {
     }
   }
 
-  if (level.letters.length > 0 && s.letters.length === 0) return { ...s, status: "won" };
+  if (level.letters.length > 0 && s.letters.length === 0) {
+    // 점수는 클리어 프레임에 한 번만, 감소 전 타이머 표시값으로 (2.2 점수).
+    return { ...s, status: "won", score: s.score + 100 * level.letters.length + 10 * timerDisplay(s) };
+  }
 
   if (s.remainingMs === null) return s;
   const remainingMs = Math.max(0, s.remainingMs - dt);
@@ -197,4 +198,16 @@ export function letterPositions(state) {
 // 타이머 표시 값: 올림(남은 ms / 1000) (2.2).
 export function timerDisplay(state) {
   return Math.ceil(state.remainingMs / 1000);
+}
+
+// 이번 프레임에 낼 효과음 이름 목록 (7장 효과음). 순수 함수: 상태 두 개만 본다.
+// 마지막 편지 프레임은 배달 소리 없이 클리어/최종 소리 하나만 낸다.
+export function soundsOf(prev, next) {
+  if (prev === next || !prev.started || prev.status !== "playing") return [];
+  if (next.status === "won") return [next.levelIndex === LEVEL_COUNT - 1 ? "final" : "clear"];
+  if (next.status === "lost") return ["fail"];
+  if (next.levelIndex !== prev.levelIndex) return [];
+  if (next.delivered > prev.delivered) return ["deliver"];
+  if (!prev.move && next.move?.push) return ["push"];
+  return [];
 }

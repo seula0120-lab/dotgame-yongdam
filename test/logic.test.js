@@ -3,12 +3,15 @@ import assert from "node:assert/strict";
 import { LEVEL_1, LEVEL_1_TIME_MS, LEVELS } from "../src/levels.js";
 import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS } from "../src/sprites.js";
 import { STRINGS } from "../src/strings.js";
+import { SOUNDS, createAudio } from "../src/audio.js";
+import { BEST_KEY, readBest, saveBest } from "../src/storage.js";
 import {
   TILE,
   COLS,
   ROWS,
   SCALE,
   parseLevel,
+  soundsOf,
   createState,
   tick,
   keyToDir,
@@ -335,7 +338,7 @@ test("7장 문구의 글자는 모두 글리프가 있고 크기·색이 정해�
     }
     assert.ok(g.flat().some((v) => v === 7), c);
   }
-  assert.equal([...chars].filter((c) => /[가-힣]/.test(c)).length, 17);
+  assert.equal([...chars].filter((c) => /[가-힣]/.test(c)).length, 21); // v5 7장: 한글 21자
 });
 
 test("문구는 기획서 7장 그대로", () => {
@@ -470,12 +473,14 @@ test("플레이 중 R: 지금 레벨만 처음 상태로, 레벨 1로 가지 않
   assert.equal(r.remainingMs, 60000);
 });
 
-test("(goal-4 임시) 레벨 3 클리어: Enter는 같은 객체, R은 레벨 1 처음부터 (R3-6)", () => {
-  const s = presses(createState(LV[2], 2), LV[2], [...SOLUTION[3]].map((c) => KEY[c]));
-  assert.equal(screenOf(s), "clear");
+test("레벨 3 클리어는 최종 화면: Enter는 같은 객체, R은 새 판 레벨 1 점수 0 (3장, R3-17)", () => {
+  const s = presses(createState(LV[2], 2, 880), LV[2], [...SOLUTION[3]].map((c) => KEY[c]));
+  assert.equal(screenOf(s), "final");
   assert.equal(startGame(s, LV), s);
+  assert.equal(tick(s, LV[2], ["up"], 100), s);
   const r = restart(s, LV);
   assert.equal(r.levelIndex, 0);
+  assert.equal(r.score, 0);
   assert.equal(r.remainingMs, 30000);
   assert.equal(screenOf(r), "play");
 });
@@ -495,4 +500,206 @@ test("레벨 2·3에서도 밀기와 막힘 규칙이 같다 (R3-9)", () => {
   s = press(createState(l3, 2), l3, "up");
   assert.deepEqual(s.pos, { x: 2, y: 1 });
   assert.equal(tick(s, l3, ["up"], 0).move, null);
+});
+
+// ---- R3 goal-5: 기대값은 GAME_DESIGN.md v5 (2.2 점수, 3장, 7장 효과음, 8장 저장·오디오, R3-10~R3-21) ----
+
+const keysOf = (n) => [...SOLUTION[n]].map((c) => KEY[c]);
+function playAll() {
+  let s = startGame(createTitleState(LV[0]), LV);
+  const scores = [];
+  for (const n of [1, 2, 3]) {
+    s = presses(s, LV[n - 1], keysOf(n));
+    scores.push(s.score);
+    if (n < 3) s = startGame(s, LV);
+  }
+  return { s, scores };
+}
+
+test("점수: 5장 풀이 재생은 430, 880, 1520 (2.2 점수 예, R3-14, R3-15)", () => {
+  const { s, scores } = playAll();
+  assert.deepEqual(scores, [430, 880, 1520]); // 430, +450, +640
+  assert.equal(screenOf(s), "final");
+});
+
+test("점수: 100 x 편지 수 + 10 x 타이머 표시값을 클리어 프레임에 한 번만 (2.2)", () => {
+  const lv = parseLevel(["SLM."], 30000);
+  let s = tick(createState(lv, 0, 50), lv, ["right"], 0);
+  s = run(s, lv, 500, 100);
+  assert.equal(s.score, 50);
+  s = tick(s, lv, [], 100); // 클리어: 남은 시간 29500ms -> 표시 30
+  assert.equal(s.status, "won");
+  assert.equal(s.score, 50 + 100 + 300);
+  assert.equal(tick(s, lv, [], 100), s); // 클리어 뒤에는 더 오르지 않는다
+});
+
+test("점수는 클리어 화면 R(무시), 실패 R, 플레이 중 R로 변하지 않고 Enter로 다음 레벨에 이어진다 (R3-16)", () => {
+  const cleared = presses(createState(LV[0], 0), LV[0], keysOf(1));
+  assert.equal(cleared.score, 430);
+  assert.equal(restart(cleared, LV), cleared);
+  const next = startGame(cleared, LV);
+  assert.equal(next.score, 430);
+  const mid = tick(next, LV[1], ["right"], 0);
+  assert.equal(restart(mid, LV).score, 430);
+  const failed = run(next, LV[1], 45000, 100);
+  assert.equal(screenOf(failed), "fail");
+  assert.equal(failed.score, 430);
+  assert.equal(restart(failed, LV).score, 430);
+});
+
+test("타이틀에서 Enter는 점수 0으로 시작한다 (3장)", () => {
+  assert.equal(startGame(createTitleState(LV[0]), LV).score, 0);
+});
+
+test("soundsOf: 밀기는 편지를 미는 이동 시작 한 번, 걷기와 막힘은 무음 (R3-10)", () => {
+  const lv = parseLevel(["S.L..M"], 30000);
+  const a = createState(lv);
+  const walk = tick(a, lv, ["right"], 0);
+  assert.deepEqual(soundsOf(a, walk), []);
+  const b = presses(a, lv, ["right"]);
+  const push = tick(b, lv, ["right"], 0);
+  assert.deepEqual(soundsOf(b, push), ["push"]);
+  const during = tick(push, lv, [], 100);
+  assert.deepEqual(soundsOf(push, during), []);
+  const wall = parseLevel(["S#"], 30000);
+  const w = createState(wall);
+  assert.deepEqual(soundsOf(w, tick(w, wall, ["right"], 0)), []);
+});
+
+test("soundsOf: 배달은 이동 완료 프레임에만, 마지막 편지는 클리어/최종 하나만 (R3-11)", () => {
+  const lv = parseLevel(["SLM.L"], 30000); // 편지 2개 중 하나만 배달하면 배달 소리
+  let s = tick(createState(lv), lv, ["right"], 0);
+  s = run(s, lv, 400, 100);
+  const mid = tick(s, lv, [], 100); // 이동 도중
+  assert.deepEqual(soundsOf(s, mid), []);
+  const done = tick(mid, lv, [], 100); // 이동 완료 프레임
+  assert.equal(done.status, "playing");
+  assert.deepEqual(soundsOf(mid, done), ["deliver"]);
+
+  const one = parseLevel(["SLM."], 30000);
+  let t = tick(createState(one, 0), one, ["right"], 0);
+  t = run(t, one, 500, 100);
+  const last = tick(t, one, [], 100);
+  assert.equal(last.status, "won");
+  assert.deepEqual(soundsOf(t, last), ["clear"]);
+  const asFinal = { ...t, levelIndex: 2 };
+  assert.deepEqual(soundsOf(asFinal, tick(asFinal, one, [], 100)), ["final"]);
+});
+
+test("soundsOf: 실패는 전이 순간 한 번, 화면이 떠 있는 동안과 타이틀은 무음 (R3-12, R3-13)", () => {
+  const lv = parseLevel(["SLM"], 300);
+  const s = createState(lv);
+  const t1 = run(s, lv, 200, 100);
+  const lost = tick(t1, lv, [], 100);
+  assert.equal(lost.status, "lost");
+  assert.deepEqual(soundsOf(t1, lost), ["fail"]);
+  assert.deepEqual(soundsOf(lost, tick(lost, lv, [], 100)), []);
+  const title = createTitleState(lv);
+  assert.deepEqual(soundsOf(title, startGame(title, [lv, lv, lv])), []);
+  const cleared = presses(createState(LV[0], 0), LV[0], keysOf(1));
+  assert.deepEqual(soundsOf(cleared, startGame(cleared, LV)), []);
+  assert.deepEqual(soundsOf(lost, restart(lost, [lv])), []);
+});
+
+function fakeStorage(initial) {
+  const data = new Map(initial === undefined ? [] : [[BEST_KEY, initial]]);
+  return { data, getItem: (k) => (data.has(k) ? data.get(k) : null), setItem: (k, v) => data.set(k, String(v)) };
+}
+
+test("최고 점수 읽기: 없음, 정수 문자열, 정수 아님은 저장값 없음, 예외는 실패 (8장)", () => {
+  assert.deepEqual(readBest(() => fakeStorage()), { ok: true, value: null });
+  assert.deepEqual(readBest(() => fakeStorage("1520")), { ok: true, value: 1520 });
+  for (const bad of ["abc", "-5", "12.5", "", "1e3"]) {
+    assert.deepEqual(readBest(() => fakeStorage(bad)), { ok: true, value: null }, bad);
+  }
+  assert.equal(readBest(() => { throw new Error("denied"); }).ok, false);
+  assert.equal(readBest(() => ({ getItem() { throw new Error("x"); } })).ok, false);
+});
+
+test("최고 점수 저장: 더 클 때만 쓴다. 낮거나 같은 점수는 쓰지 않고 성공 (R3-18, R3-19)", () => {
+  const st = fakeStorage();
+  assert.deepEqual(saveBest(() => st, 1000), { ok: true, best: 1000 });
+  assert.equal(st.data.get(BEST_KEY), "1000");
+  assert.deepEqual(saveBest(() => st, 900), { ok: true, best: 1000 });
+  assert.deepEqual(saveBest(() => st, 1000), { ok: true, best: 1000 });
+  assert.equal(st.data.get(BEST_KEY), "1000");
+  assert.deepEqual(saveBest(() => st, 1200), { ok: true, best: 1200 });
+  assert.equal(st.data.get(BEST_KEY), "1200");
+  assert.deepEqual([...st.data.keys()], [BEST_KEY]); // 키는 하나뿐
+});
+
+test("저장소가 막히면 읽기·쓰기 실패를 알리고 대체 저장을 만들지 않는다 (R3-20)", () => {
+  assert.deepEqual(saveBest(() => { throw new Error("blocked"); }, 500), { ok: false, best: null });
+  const readOnly = { getItem: () => null, setItem() { throw new Error("quota"); } };
+  assert.deepEqual(saveBest(() => readOnly, 500), { ok: false, best: null });
+});
+
+function fakeAudioCtor(state = "running") {
+  const log = { oscillators: [], resumed: 0, created: 0 };
+  class Ctx {
+    constructor() { log.created++; this.state = state; this.currentTime = 10; this.destination = {}; }
+    resume() { log.resumed++; return Promise.resolve(); }
+    createGain() {
+      return { gain: { value: 1, setValueAtTime() {}, linearRampToValueAtTime() {} }, connect() {} };
+    }
+    createOscillator() {
+      const o = { type: "", frequency: { value: 0 }, connect() {}, start(t) { o.t = t; }, stop() {} };
+      log.oscillators.push(o);
+      return o;
+    }
+  }
+  return { Ctx, log };
+}
+
+test("효과음 합성값은 7장 표 그대로 (R3-13)", () => {
+  assert.deepEqual(SOUNDS.push, { type: "square", freqs: [140], ms: 60 });
+  assert.deepEqual(SOUNDS.deliver, { type: "sine", freqs: [660, 880], ms: 80 });
+  assert.deepEqual(SOUNDS.clear, { type: "triangle", freqs: [523, 659, 784], ms: 120 });
+  assert.deepEqual(SOUNDS.final, { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 });
+  assert.deepEqual(SOUNDS.fail, { type: "square", freqs: [392, 294, 196], ms: 160 });
+  assert.deepEqual(Object.keys(SOUNDS).sort(), ["clear", "deliver", "fail", "final", "push"]);
+});
+
+test("오디오: unlock 전에는 소리 없음, 이후 음을 이어서 낸다, 재생 상태가 아니면 무음 (8장)", () => {
+  const { Ctx, log } = fakeAudioCtor();
+  const audio = createAudio(Ctx);
+  audio.play("clear");
+  assert.equal(log.oscillators.length, 0);
+  audio.unlock();
+  audio.unlock();
+  assert.equal(log.created, 1);
+  audio.play("clear");
+  assert.deepEqual(log.oscillators.map((o) => o.frequency.value), [523, 659, 784]);
+  assert.deepEqual(log.oscillators.map((o) => o.t), [10, 10.12, 10.24]);
+  const suspended = fakeAudioCtor("suspended");
+  const a2 = createAudio(suspended.Ctx);
+  a2.unlock();
+  a2.play("fail");
+  assert.equal(suspended.log.oscillators.length, 0);
+  assert.equal(suspended.log.resumed, 1);
+});
+
+test("오디오 생성이 실패하거나 지원이 없어도 예외 없이 무음 (8장)", () => {
+  const a = createAudio(class { constructor() { throw new Error("no audio"); } });
+  a.unlock();
+  a.play("push");
+  const b = createAudio(undefined);
+  b.unlock();
+  b.play("push");
+});
+
+test("문구: 점수와 최고 글자 글리프, 한글 글리프는 21자 (7장 R3, R3-21)", () => {
+  assert.equal(STRINGS.score, "점수");
+  assert.equal(STRINGS.best, "최고");
+  const chars = new Set(Object.values(STRINGS).join("").replace(/ /g, ""));
+  assert.equal([...chars].filter((c) => /[가-힣]/.test(c)).length, 21);
+  for (const c of "점수최고") {
+    const g = GLYPHS[c];
+    assert.equal(g.length, 12);
+    for (const row of g) {
+      assert.equal(row.length, 12);
+      for (const idx of row) assert.ok(idx === -1 || idx === 7);
+    }
+    assert.ok(g.flat().some((v) => v === 7), c);
+  }
 });

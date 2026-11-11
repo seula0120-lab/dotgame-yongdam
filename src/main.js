@@ -1,5 +1,7 @@
 import { LEVELS } from "./levels.js";
 import { STRINGS } from "./strings.js";
+import { createAudio } from "./audio.js";
+import { readBest, saveBest } from "./storage.js";
 import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS, GLYPH_W, GLYPH_H } from "./sprites.js";
 import {
   TILE,
@@ -10,6 +12,7 @@ import {
   startGame,
   restart,
   screenOf,
+  soundsOf,
   tick,
   keyToDir,
   tileAt,
@@ -21,6 +24,19 @@ import {
 const levels = LEVELS.map((l) => parseLevel(l.grid, l.timeMs));
 let state = createTitleState(levels[0]);
 
+const audio = createAudio(window.AudioContext ?? window.webkitAudioContext);
+
+// 저장소 접근 자체가 예외를 던질 수 있어 함수로 넘긴다 (8장). 실패하면 console.warn 한 번, 최고 줄 숨김.
+const getStorage = () => window.localStorage;
+let warned = false;
+function warnStorage() {
+  if (!warned) console.warn("최고 점수 저장소를 쓸 수 없어 최고 점수를 표시하지 않습니다.");
+  warned = true;
+}
+const titleBest = readBest(getStorage);
+if (!titleBest.ok) warnStorage();
+let finalBest = null; // 최종 화면 전이에서 저장에 성공했을 때만 { best }
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
@@ -30,6 +46,7 @@ ctx.imageSmoothingEnabled = false;
 let pressed = [];
 let action = null;
 window.addEventListener("keydown", (e) => {
+  if (!e.repeat) audio.unlock(); // 사용자 입력 안에서 동기로 오디오를 준비한다 (8장)
   if (e.code === "Enter" || (e.code === "KeyR" && !e.ctrlKey && !e.metaKey)) {
     e.preventDefault();
     if (!e.repeat) action = e.code === "Enter" ? "start" : "restart";
@@ -75,11 +92,15 @@ function renderTextScreen(lines) {
 
 function render(level) {
   const screen = screenOf(state);
-  if (screen === "title") return renderTextScreen([STRINGS.title, STRINGS.startHint]);
-  if (screen === "clear") {
-    // 레벨 3 클리어는 goal-4 임시 화면: Enter로 시작 줄이 없다 (9장 R3-6).
-    const last = state.levelIndex === levels.length - 1;
-    return renderTextScreen(last ? [STRINGS.clear] : [STRINGS.clear, STRINGS.startHint]);
+  const scoreLine = `${STRINGS.score} ${state.score}`;
+  if (screen === "title") {
+    const bestLine = titleBest.value === null ? [] : [`${STRINGS.best} ${titleBest.value}`];
+    return renderTextScreen([STRINGS.title, ...bestLine, STRINGS.startHint]);
+  }
+  if (screen === "clear") return renderTextScreen([STRINGS.clear, scoreLine, STRINGS.startHint]);
+  if (screen === "final") {
+    const bestLine = finalBest ? [`${STRINGS.best} ${finalBest.best}`] : [];
+    return renderTextScreen([STRINGS.clear, scoreLine, ...bestLine]);
   }
   if (screen === "fail") return renderTextScreen([STRINGS.fail]);
   ctx.fillStyle = PALETTE[3];
@@ -118,7 +139,15 @@ function frame(now) {
   const next =
     action === "start" ? startGame(state, levels) : action === "restart" ? restart(state, levels) : state;
   const level = levels[next.levelIndex];
+  const prev = state;
   state = next !== state ? next : tick(state, level, pressed, dt);
+  for (const name of soundsOf(prev, state)) audio.play(name);
+  // 최종 화면이 되는 전이에서 한 번만 저장한다 (8장).
+  if (screenOf(prev) !== "final" && screenOf(state) === "final") {
+    const saved = saveBest(getStorage, state.score);
+    finalBest = saved.ok ? saved : null;
+    if (!saved.ok) warnStorage();
+  }
   action = null;
   pressed = [];
   render(level);
