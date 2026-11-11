@@ -4,7 +4,7 @@
   "current_phase": "active",
   "skill": "ultragoal",
   "cwd": "/Users/seul/Desktop/dotgame-yongdam",
-  "updated_at": "2026-11-10T09:53:39.625Z",
+  "updated_at": "2026-11-11T00:52:53.500Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
@@ -13,19 +13,19 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-10T09:53:39.625Z",
-    "fresh_until": "2026-11-10T10:23:39.625Z",
+    "mutated_at": "2026-11-11T00:52:53.500Z",
+    "fresh_until": "2026-11-11T01:22:53.500Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-10T09:53:39.625Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-11T00:52:53.500Z",
     "verb": "reconcile",
-    "from_phase": "blocked",
+    "from_phase": "active",
     "to_phase": "active",
     "forced": true,
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "f1f54df3cc6dce980252974161692a88a1dd8c2d88d1a09473663ef7aa9f8acf",
+      "value": "764b1cf6b3e9bda1278a5ef4e374ede81421ccaf009aef180bea53deb1d8cb25",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-      "computed_at": "2026-11-10T09:53:39.625Z"
+      "computed_at": "2026-11-11T00:52:53.500Z"
     }
   },
   "status": "active",
@@ -61,5 +61,5 @@
     "evidence": "reactivating G001 for completion checkpoint after gate gen3 joined clean"
   },
   "active_goal_id": "G001",
-  "state_revision": 16
+  "state_revision": 19
 }
