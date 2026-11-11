@@ -4,6 +4,8 @@
 
 기획의 유일한 기준은 [GAME_DESIGN.md](GAME_DESIGN.md)이고, 작업 규칙은 [AGENTS.md](AGENTS.md)에 있다. 이 README와 기획서가 다르면 기획서가 맞다.
 
+배포: <https://seula0120-lab.github.io/dotgame-yongdam/> (GitHub Pages)
+
 ## 실행
 
 게임은 HTTP로 열어야 한다. 프로젝트 폴더에서 아래를 실행하고 브라우저에서 <http://localhost:8000>을 연다. 이 서버는 파일을 내려주는 정적 서버일 뿐이고 게임 서버가 아니다. (기획서 8장에서 확인한 브라우저: Chrome)

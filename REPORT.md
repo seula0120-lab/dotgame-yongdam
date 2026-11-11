@@ -1,6 +1,6 @@
 # REPORT — 달팽이 우체부 (dotgame-yongdam)
 
-레벨 3개, 효과음, 점수, 최고 점수가 있는 도트 게임을 gajae-code(ralplan → ultragoal)로 만들었다. 테스트는 67개이고 모두 통과한다. 원장(ledger)은 `.gjc/_session-01a1c41b-…/ultragoal/ledger.jsonl`이다. 아래 줄 번호는 이 파일의 줄이다.
+레벨 3개, 효과음, 점수, 최고 점수가 있는 도트 게임을 gajae-code(ralplan → ultragoal)로 만들었다. 테스트는 68개이고 모두 통과한다. 원장(ledger)은 `.gjc/_session-01a1c41b-…/ultragoal/ledger.jsonl`이다. 아래 줄 번호는 이 파일의 줄이다.
 
 ## 1. 기획서가 어떻게 자랐는가
 
