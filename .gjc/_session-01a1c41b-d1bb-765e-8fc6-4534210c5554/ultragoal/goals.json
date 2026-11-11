@@ -41,14 +41,39 @@
       "id": "G002",
       "title": "goal-5 sound, score, best score, final screen (R3-10..R3-21)",
       "objective": "Implement per GAME_DESIGN.md v5 ch.2.2/3/7/8/9: score = 100 x letters + 10 x timerDisplay at the clear frame; pure soundsOf(prev,next) in logic (no events field; deliver+clear/final -> clear/final only); src/audio.js Web Audio synthesis with injectable AudioContext, unlock synchronously in keydown, no audio files; src/storage.js single key snailPostman.bestScore with injectable storage, getter exceptions caught, save once on final transition, hide 최고 line on failure, no fake fallback; final screen (배달 완료 / 점수 N / 최고 B, no Enter hint, Enter ignored, R new run score 0); title shows 최고 N only when stored; new Hangul glyphs 점 수 최 고 12x12 palette 7 only; strings only in src/strings.js. Tests per plan section 10. Human check items: R3-10..R3-21.",
-      "status": "active",
+      "status": "complete",
       "createdAt": "2026-11-11T03:46:21.464Z",
-      "updatedAt": "2026-11-11T04:24:02.114Z",
-      "startedAt": "2026-11-11T04:24:02.114Z"
+      "updatedAt": "2026-11-11T05:14:07.849Z",
+      "startedAt": "2026-11-11T04:24:02.114Z",
+      "completedAt": "2026-11-11T05:14:07.849Z",
+      "evidence": "goal-5 a93fb22 + fix-3/fix-4 (push sound per human-chosen design-v5 revision). Human confirmed R3-10..R3-21 incl. push sound candidate D. Boundary gate gen1 sourceHash 0079afab: cleaner passed, architect CLEAR/CLEAR/CLEAR APPROVE, QA qa8 passed, terminal critic OKAY. node --test 57 pass.",
+      "completionVerification": {
+        "schemaVersion": 1,
+        "receiptId": "46f4d7f3-ee8d-451f-9c28-8c3a5fe6bccb",
+        "verifiedAt": "2026-11-11T05:14:07.849Z",
+        "goalId": "G002",
+        "receiptKind": "final-aggregate",
+        "goalStatusBeforeCheckpoint": "active",
+        "gjcGoalMode": "aggregate",
+        "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
+        "qualityGateHash": "927f009615ac3c5e8d342bc282fd3b240ef2ea5383d20349bac986ef9aba8dbe",
+        "planGeneration": "5647e20d346a27058249f0df3c281c6ed8e2003da7058831f4a6088500fcf6cf",
+        "basis": {
+          "planHashBeforeCheckpoint": "7b778129d17167d71885245dfbf3926d0975328ba2dc4459ad5bc5d9fb64537e",
+          "latestRelevantLedgerEventIdBeforeCheckpoint": "32444917-3467-4e03-8f51-e1ce1847998a",
+          "goalUpdatedAtBeforeCheckpoint": "2026-11-11T05:14:07.849Z",
+          "relevantGoalIdsBeforeCheckpoint": [
+            "G001",
+            "G002"
+          ],
+          "requiredGoalSetHashBeforeCheckpoint": "816a946972255e542684fd9d21a563e0d4ee3e841330355699350b9ee4b0bc08"
+        },
+        "checkpointLedgerEventId": "4d553418-710c-47e5-b106-f59bd1a4f51c"
+      }
     }
   ],
   "createdAt": "2026-11-11T03:46:21.464Z",
-  "updatedAt": "2026-11-11T04:24:02.114Z",
+  "updatedAt": "2026-11-11T05:14:07.849Z",
   "repositoryBinding": {
     "schema": "gjc.repository_binding.v1",
     "worktreeRoot": "/Users/seul/Desktop/dotgame-yongdam",
@@ -57,5 +82,5 @@
     "head": "09e52f4344b20b8764f7d797fd0af198705c3fca",
     "branch": "main"
   },
-  "state_revision": 14
+  "state_revision": 15
 }
