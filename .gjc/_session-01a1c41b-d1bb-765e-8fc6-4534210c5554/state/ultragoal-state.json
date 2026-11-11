@@ -1,10 +1,10 @@
 {
-  "active": true,
+  "active": false,
   "version": 2,
-  "current_phase": "active",
+  "current_phase": "complete",
   "skill": "ultragoal",
   "cwd": "/Users/seul/Desktop/dotgame-yongdam",
-  "updated_at": "2026-11-11T02:42:50.433Z",
+  "updated_at": "2026-11-11T02:56:21.330Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
@@ -13,22 +13,22 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-11T02:42:50.433Z",
-    "fresh_until": "2026-11-11T03:12:50.433Z",
+    "mutated_at": "2026-11-11T02:56:21.330Z",
+    "fresh_until": "2026-11-11T03:26:21.330Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-11T02:42:50.433Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-11T02:56:21.330Z",
     "verb": "reconcile",
     "from_phase": "active",
-    "to_phase": "active",
+    "to_phase": "complete",
     "forced": true,
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "51aa5b2557292c39e52e5ff71943140adb2aa4be2ee87bd125e487dc30b48edf",
+      "value": "0b0fc51ed094c2ed1f349e434824d59103974858fa5a7c1c94f30300128af5f1",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-      "computed_at": "2026-11-11T02:42:50.433Z"
+      "computed_at": "2026-11-11T02:56:21.330Z"
     }
   },
-  "status": "active",
+  "status": "complete",
   "goals": [
     {
       "id": "G001",
@@ -38,13 +38,13 @@
     {
       "id": "G002",
       "title": "goal-3 win/lose and screen flow (R2-10..R2-17)",
-      "status": "active"
+      "status": "complete"
     }
   ],
   "counts": {
     "pending": 0,
-    "active": 1,
-    "complete": 1,
+    "active": 0,
+    "complete": 2,
     "failed": 0,
     "blocked": 0,
     "review_blocked": 0,
@@ -58,13 +58,12 @@
   "nudge_count": 6,
   "nudge_remaining": 0,
   "nudge_goal_id": "G002",
-  "nudge_target_kind": "story",
+  "nudge_target_kind": "final_aggregate_receipt",
   "latestLedgerEvent": {
-    "event": "steering_accepted",
-    "timestamp": "2026-11-11T02:24:44.597Z",
-    "kind": "annotate_ledger",
-    "evidence": "Human browser check of goal-3 (2026-11-11): R2-10..R2-13, R2-15..R2-17 pass; R2-14 confirmed by unit test and human approved clear-before-timeout decision. Human glyph-shape comment was an unfilled template placeholder, so no comment recorded."
+    "event": "goal_checkpointed",
+    "goalId": "G002",
+    "timestamp": "2026-11-11T02:56:21.317Z",
+    "evidence": "goal-3 done: human confirmed R2-10..R2-13, R2-15..R2-17 pass; R2-14 unit test + human approval of clear-before-timeout; boundary gate gen2 clean (cleaner/architect/QA), terminal critic OKAY; 31/31 tests"
   },
-  "active_goal_id": "G002",
-  "state_revision": 39
+  "state_revision": 40
 }

@@ -41,14 +41,39 @@
       "id": "G002",
       "title": "goal-3 win/lose and screen flow (R2-10..R2-17)",
       "objective": "Implement per GAME_DESIGN.md v4 ch.2.2/3/7 and plan goal-3 part: screens title/play/clear/fail derived from state; Enter starts play (direction input in that frame discarded), timer starts at play entry; clear on last delivery (clear beats same-frame timeout); fail at 0; R restarts per ch.2.2/3 (ignored on title, ignores Ctrl/Meta+R); src/strings.js with the exact texts; bitmap glyphs for the 17 Korean chars, Enter letters and digits (Korean 12x12, Latin/digits 6x12), palette colors only. Human check items: R2-10..R2-17.",
-      "status": "active",
+      "status": "complete",
       "createdAt": "2026-11-11T02:09:26.920Z",
-      "updatedAt": "2026-11-11T02:17:19.590Z",
-      "startedAt": "2026-11-11T02:17:19.590Z"
+      "updatedAt": "2026-11-11T02:56:21.301Z",
+      "startedAt": "2026-11-11T02:17:19.590Z",
+      "completedAt": "2026-11-11T02:56:21.301Z",
+      "evidence": "goal-3 done: human confirmed R2-10..R2-13, R2-15..R2-17 pass; R2-14 unit test + human approval of clear-before-timeout; boundary gate gen2 clean (cleaner/architect/QA), terminal critic OKAY; 31/31 tests",
+      "completionVerification": {
+        "schemaVersion": 1,
+        "receiptId": "8b6805a6-1081-4806-aa96-34b3bb9b0f32",
+        "verifiedAt": "2026-11-11T02:56:21.301Z",
+        "goalId": "G002",
+        "receiptKind": "final-aggregate",
+        "goalStatusBeforeCheckpoint": "active",
+        "gjcGoalMode": "aggregate",
+        "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
+        "qualityGateHash": "9e8f62f2512b70920f944be5211d9b9a4757e964bdcc19b75fda22bf05262738",
+        "planGeneration": "92588be5aa5083995a6ca8a5d8cdd98b6d7a9bd92342cc7ef3121abb7f812d69",
+        "basis": {
+          "planHashBeforeCheckpoint": "ee6b4c33ff637844ddad60f75783b7fbef328065e378e8619b461349577f259c",
+          "latestRelevantLedgerEventIdBeforeCheckpoint": "b3b2b600-7a5b-4693-8161-f4ab80fea548",
+          "goalUpdatedAtBeforeCheckpoint": "2026-11-11T02:56:21.301Z",
+          "relevantGoalIdsBeforeCheckpoint": [
+            "G001",
+            "G002"
+          ],
+          "requiredGoalSetHashBeforeCheckpoint": "d04d336f19db1144abb3fd001a80730bf130a7bdf271b3a960b46cb76fc2daf9"
+        },
+        "checkpointLedgerEventId": "48cf596b-82b8-4fc3-908c-76afd2cf534e"
+      }
     }
   ],
   "createdAt": "2026-11-11T02:09:26.920Z",
-  "updatedAt": "2026-11-11T02:17:19.590Z",
+  "updatedAt": "2026-11-11T02:56:21.301Z",
   "repositoryBinding": {
     "schema": "gjc.repository_binding.v1",
     "worktreeRoot": "/Users/seul/Desktop/dotgame-yongdam",
@@ -57,5 +82,5 @@
     "head": "dc72213619d052f61c9d5c31ab124221ae064d7e",
     "branch": "main"
   },
-  "state_revision": 9
+  "state_revision": 10
 }
