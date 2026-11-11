@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { LEVEL_1, LEVEL_1_TIME_MS } from "../src/levels.js";
-import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS } from "../src/sprites.js";
+import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS } from "../src/sprites.js";
+import { STRINGS } from "../src/strings.js";
 import {
   TILE,
   COLS,
@@ -14,6 +15,10 @@ import {
   renderPos,
   letterPositions,
   timerDisplay,
+  createTitleState,
+  startGame,
+  restart,
+  screenOf,
 } from "../src/logic.js";
 
 // 기대값은 GAME_DESIGN.md 숫자: 0.60초/칸, 16x16 타일, 16x12칸, 256x192, 768x576.
@@ -268,4 +273,75 @@ test("숫자 글리프 0~9는 6x12이고 색은 글자색 7뿐 (6장 R2, R2-8)",
       for (const idx of row) assert.ok(idx === -1 || idx === 7);
     }
   }
+});
+
+// ---- R2 goal-3: 기대값은 GAME_DESIGN.md v4 (3장 화면 흐름, 2.2, 7장, R2-10~R2-17) ----
+
+test("처음에는 타이틀이고 시계도 입력도 멈춰 있다 (R2-10)", () => {
+  let s = createTitleState(L1);
+  assert.equal(screenOf(s), "title");
+  const t = tick(s, L1, ["right"], 100);
+  assert.equal(t, s);
+  assert.equal(t.remainingMs, 30000);
+  assert.equal(restart(s, L1), s); // 타이틀에서 R은 아무 일도 없다
+});
+
+test("Enter로 플레이 시작, 시계는 그 뒤부터 (R2-11)", () => {
+  const s = startGame(createTitleState(L1), L1);
+  assert.equal(screenOf(s), "play");
+  assert.equal(s.remainingMs, 30000);
+  assert.equal(tick(s, L1, [], 100).remainingMs, 29900);
+});
+
+test("클리어 화면과 실패 화면 (R2-12, R2-13)", () => {
+  const lv = parseLevel(["SLM."], 30000);
+  let s = press(startGame(createTitleState(lv), lv), lv, "right");
+  assert.equal(screenOf(s), "clear");
+  const lv2 = parseLevel(["SLM."], 300);
+  s = run(startGame(createTitleState(lv2), lv2), lv2, 300, 100);
+  assert.equal(screenOf(s), "fail");
+  const mid = run(startGame(createTitleState(lv2), lv2), lv2, 200, 100);
+  assert.equal(screenOf(mid), "play");
+});
+
+test("플레이 중 R: 처음 상태로, 이동 중이어도 (R2-15)", () => {
+  let s = startGame(createTitleState(L1), L1);
+  s = tick(s, L1, ["right"], 0);
+  s = run(s, L1, 300, 100);
+  s = restart(s, L1);
+  assert.deepEqual(s, startGame(createTitleState(L1), L1));
+  assert.equal(s.remainingMs, 30000);
+});
+
+test("클리어/실패 화면에서 R은 플레이로 다시 시작, Enter는 무시 (R2-16, 3장)", () => {
+  const lv = parseLevel(["SLM."], 300);
+  const failed = run(startGame(createTitleState(lv), lv), lv, 300, 100);
+  assert.equal(startGame(failed, lv), failed);
+  const again = restart(failed, lv);
+  assert.equal(screenOf(again), "play");
+  assert.equal(again.remainingMs, 300);
+});
+
+test("7장 문구의 글자는 모두 글리프가 있고 크기·색이 정해진 대로 (R2-17)", () => {
+  const all = Object.values(STRINGS).join("").replace(/ /g, "");
+  const chars = new Set(all);
+  for (const c of chars) {
+    const g = GLYPHS[c];
+    assert.ok(g, c);
+    assert.equal(g.length, 12);
+    const w = /[가-힣]/.test(c) ? 12 : 6;
+    for (const row of g) {
+      assert.equal(row.length, w);
+      for (const idx of row) assert.ok(idx === -1 || idx === 7);
+    }
+    assert.ok(g.flat().some((v) => v === 7), c);
+  }
+  assert.equal([...chars].filter((c) => /[가-힣]/.test(c)).length, 17);
+});
+
+test("문구는 기획서 7장 그대로", () => {
+  assert.equal(STRINGS.title, "달팽이 우체부");
+  assert.equal(STRINGS.startHint, "Enter로 시작");
+  assert.equal(STRINGS.clear, "배달 완료");
+  assert.equal(STRINGS.fail, "해가 졌어요");
 });

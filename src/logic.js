@@ -69,7 +69,31 @@ export function createState(level) {
     delivered: 0,
     remainingMs: level.timeLimitMs,
     status: "playing", // playing | won | lost (2.2)
+    started: true,
   };
+}
+
+// 페이지를 처음 열었을 때의 상태: 타이틀 화면 (3장). 시계는 흐르지 않는다.
+export function createTitleState(level) {
+  return { ...createState(level), started: false };
+}
+
+// 화면은 저장하지 않고 상태에서 정한다 (3장).
+export function screenOf(state) {
+  if (!state.started) return "title";
+  if (state.status === "won") return "clear";
+  if (state.status === "lost") return "fail";
+  return "play";
+}
+
+// 타이틀에서 Enter: 플레이 시작 (레벨 1 처음 상태). 그 밖의 화면에서는 아무 일도 없다 (3장).
+export function startGame(state, level) {
+  return state.started ? state : createState(level);
+}
+
+// R: 타이틀에서는 아무 일도 없고, 플레이/클리어/실패에서는 처음 상태로 다시 시작 (2.2, 3장).
+export function restart(state, level) {
+  return state.started ? createState(level) : state;
 }
 
 function letterIndexAt(state, x, y) {
@@ -111,7 +135,7 @@ function commitMove(state, level) {
 // 처리 순서 (2.2): 이동 진행/완료 -> 편지 확정과 배달 -> 클리어 -> 시간 감소 -> 실패.
 // 이동 중 들어온 입력은 모두 버린다. 완료 프레임의 초과 시간은 이동에서만 버린다.
 export function tick(state, level, pressed, dtMs) {
-  if (state.status !== "playing") return state;
+  if (!state.started || state.status !== "playing") return state;
   const dt = Math.min(dtMs, DT_CAP_MS);
 
   let s = state;
