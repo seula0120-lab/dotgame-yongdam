@@ -1,86 +1,61 @@
 {
   "version": 1,
-  "brief": "R2 execution brief for 달팽이 우체부. Approved plan: /Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/plans/ralplan/r2-plan/pending-approval.md (sha256 29f8585c...). Sole spec: GAME_DESIGN.md v4 (human-signed) + AGENTS.md. Constraints: implement only what GAME_DESIGN.md v4 says; no Space+arrow move, sound, score, levels 2/3; do not edit AGENTS.md or GAME_DESIGN.md numbers; pure src/logic.js; levels copied from ch.5; sprites/glyphs as palette-index arrays; UI text only in src/strings.js; no webfont; commit prefix goal-N:. Completion = human checks the R2 items in a browser (python3 -m http.server 8000); test pass or fixture screenshots are not evidence. Stop after goal-2 for the human check before goal-3.\n\n@goal: goal-2 letters, mailbox, per-level timer (R2-1..R2-9)\nImplement per GAME_DESIGN.md v4 ch.2.1.1/2.2/4/5/6 and the plan sections 5-9 (goal-2 part): parse L and M from the ch.5 level 1 grid (2 letters, 1 mailbox, time limit 30s stored beside the level); push letters with the 0.60s move (letter interpolates linearly, commit at move completion); snail cannot enter mailbox or a blocked push; delivery at move completion removes the letter; timer = remaining ms counting dt-capped game time, displayed as ceil seconds at top-wall-row center using bitmap digit glyphs (palette indices only, no fillText); per-frame order move->delivery->clear->timer->fail; time expiry mid-move discards the move and freezes input (temporary until goal-3). Page starts playing immediately in goal-2 (no title yet). Existing R1 behavior (R1-1..R1-5) must still hold. Unit tests with expected values from the doc, including a solution-replay test (→×7 ↓×3 →×1 ↑×2 clears within 30s). Human check items: R2-1..R2-9.\n\n@goal: goal-3 win/lose and screen flow (R2-10..R2-17)\nImplement per GAME_DESIGN.md v4 ch.2.2/3/7 and plan goal-3 part: screens title/play/clear/fail derived from state; Enter starts play (direction input in that frame discarded), timer starts at play entry; clear on last delivery (clear beats same-frame timeout); fail at 0; R restarts per ch.2.2/3 (ignored on title, ignores Ctrl/Meta+R); src/strings.js with the exact texts; bitmap glyphs for the 17 Korean chars, Enter letters and digits (Korean 12x12, Latin/digits 6x12), palette colors only. Human check items: R2-10..R2-17.",
+  "brief": "R3 execution brief for 달팽이 우체부. Approved plan: /Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/plans/ralplan/r3-plan/pending-approval.md (sha256 45c02cde...). Sole spec: GAME_DESIGN.md v5 (human-signed, commit 09e52f4) + AGENTS.md. Constraints: implement only what GAME_DESIGN.md v5 says; no Space+arrow move, no snail direction display, no mute/volume/pause UI, no BGM, no audio files, no webfont, no levels beyond 3; do not edit AGENTS.md or GAME_DESIGN.md numbers; pure src/logic.js (no canvas/audio/localStorage); levels copied from ch.5 grids; sprites/glyphs as palette-index arrays; UI text only in src/strings.js; commit prefix goal-N:. Completion = human checks the R3 items in a browser (python3 -m http.server 8000); test pass or fixture screenshots are not evidence. Stop after goal-4 for the human check before goal-5.\n\n@goal: goal-4 levels 2 and 3, three-level flow (R3-1..R3-9)\nImplement per GAME_DESIGN.md v5 ch.2.2/3/5/9: LEVELS array in src/levels.js (level 1 30s, level 2 45s, level 3 60s, grids copied from ch.5), levelIndex in state, LEVEL_COUNT=3; clear (level 1,2) screen shows 배달 완료 + Enter로 시작 (no score line in goal-4), Enter on clear advances to next level (fresh state, clock starts, same-frame direction discarded), R and directions ignored on clear; fail R restarts the failed level (no return to level 1); play R restarts current level only; temporary goal-4 state: level 3 clear shows plain 배달 완료 line only, Enter ignored, R restarts level 1. Transition functions return the same object when not applicable. main.js computes level once per frame from state.levelIndex. Tests: solution replay for levels 1,2,3 (keys in ch.5; expected remaining ms 22300/24700/33100), per-level letter count/start/time limit, clear->next level, same-object identity tests, intermediate clear R ignored; update existing tests that assume level 1 only. Human check items: R3-1..R3-9.\n\n@goal: goal-5 sound, score, best score, final screen (R3-10..R3-21)\nImplement per GAME_DESIGN.md v5 ch.2.2/3/7/8/9: score = 100 x letters + 10 x timerDisplay at the clear frame; pure soundsOf(prev,next) in logic (no events field; deliver+clear/final -> clear/final only); src/audio.js Web Audio synthesis with injectable AudioContext, unlock synchronously in keydown, no audio files; src/storage.js single key snailPostman.bestScore with injectable storage, getter exceptions caught, save once on final transition, hide 최고 line on failure, no fake fallback; final screen (배달 완료 / 점수 N / 최고 B, no Enter hint, Enter ignored, R new run score 0); title shows 최고 N only when stored; new Hangul glyphs 점 수 최 고 12x12 palette 7 only; strings only in src/strings.js. Tests per plan section 10. Human check items: R3-10..R3-21.",
   "gjcGoalMode": "aggregate",
   "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
   "goals": [
     {
       "id": "G001",
-      "title": "goal-2 letters, mailbox, per-level timer (R2-1..R2-9)",
-      "objective": "Implement per GAME_DESIGN.md v4 ch.2.1.1/2.2/4/5/6 and the plan sections 5-9 (goal-2 part): parse L and M from the ch.5 level 1 grid (2 letters, 1 mailbox, time limit 30s stored beside the level); push letters with the 0.60s move (letter interpolates linearly, commit at move completion); snail cannot enter mailbox or a blocked push; delivery at move completion removes the letter; timer = remaining ms counting dt-capped game time, displayed as ceil seconds at top-wall-row center using bitmap digit glyphs (palette indices only, no fillText); per-frame order move->delivery->clear->timer->fail; time expiry mid-move discards the move and freezes input (temporary until goal-3). Page starts playing immediately in goal-2 (no title yet). Existing R1 behavior (R1-1..R1-5) must still hold. Unit tests with expected values from the doc, including a solution-replay test (→×7 ↓×3 →×1 ↑×2 clears within 30s). Human check items: R2-1..R2-9.",
+      "title": "goal-4 levels 2 and 3, three-level flow (R3-1..R3-9)",
+      "objective": "Implement per GAME_DESIGN.md v5 ch.2.2/3/5/9: LEVELS array in src/levels.js (level 1 30s, level 2 45s, level 3 60s, grids copied from ch.5), levelIndex in state, LEVEL_COUNT=3; clear (level 1,2) screen shows 배달 완료 + Enter로 시작 (no score line in goal-4), Enter on clear advances to next level (fresh state, clock starts, same-frame direction discarded), R and directions ignored on clear; fail R restarts the failed level (no return to level 1); play R restarts current level only; temporary goal-4 state: level 3 clear shows plain 배달 완료 line only, Enter ignored, R restarts level 1. Transition functions return the same object when not applicable. main.js computes level once per frame from state.levelIndex. Tests: solution replay for levels 1,2,3 (keys in ch.5; expected remaining ms 22300/24700/33100), per-level letter count/start/time limit, clear->next level, same-object identity tests, intermediate clear R ignored; update existing tests that assume level 1 only. Human check items: R3-1..R3-9.",
       "status": "complete",
-      "createdAt": "2026-11-11T02:09:26.920Z",
-      "updatedAt": "2026-11-11T02:17:19.567Z",
-      "startedAt": "2026-11-11T02:09:30.064Z",
-      "completedAt": "2026-11-11T02:17:19.567Z",
-      "evidence": "goal-2 done: human confirmed R2-1..R2-7, R2-9 pass; R2-8 no abnormality in visible range; 24/24 tests",
+      "createdAt": "2026-11-11T03:46:21.464Z",
+      "updatedAt": "2026-11-11T04:24:02.086Z",
+      "startedAt": "2026-11-11T03:46:21.721Z",
+      "completedAt": "2026-11-11T04:24:02.086Z",
+      "evidence": "goal-4 committed 69196f2; 42/42 tests; human confirmed R3-1..R3-9 in browser",
       "completionVerification": {
         "schemaVersion": 1,
-        "receiptId": "c5f2a6f1-a6f0-4403-a86c-0c884ee4e442",
-        "verifiedAt": "2026-11-11T02:17:19.567Z",
+        "receiptId": "a51feeca-d176-4b73-855f-a7dfc444783b",
+        "verifiedAt": "2026-11-11T04:24:02.086Z",
         "goalId": "G001",
         "receiptKind": "per-goal",
         "goalStatusBeforeCheckpoint": "active",
         "gjcGoalMode": "aggregate",
         "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
-        "qualityGateHash": "781310b492a7f78460726cbed4fa40b1b1d9059be76c82848b14a260643377d6",
-        "planGeneration": "0525e443099ce8135455ae507bfc12309a5799212c364a2e1a1b536c43a5f006",
+        "qualityGateHash": "ddcde0beed1213a8d8e73f05cf22db30babe6c1ce5c46c2ea00dffb28919b96e",
+        "planGeneration": "f98d63cbfbb66a6c4c3112779fb3cac6f7f09aed8f568e06b15fcf9a1da70882",
         "basis": {
-          "planHashBeforeCheckpoint": "26d674fef92c92778f408bf8eb177ba396cc353fc72bbaa40c6de0a8eccc1f8b",
-          "latestRelevantLedgerEventIdBeforeCheckpoint": "0d86fe21-460b-4c55-90a0-dc19d5c81bf8",
-          "goalUpdatedAtBeforeCheckpoint": "2026-11-11T02:17:19.567Z",
+          "planHashBeforeCheckpoint": "ed63ce7cd7a5a5578af2d223f5cd8e8f6d4591c1fc1bfd065c70795754b27e94",
+          "latestRelevantLedgerEventIdBeforeCheckpoint": "191c2668-9c3f-411b-9bce-3bd90fe1be60",
+          "goalUpdatedAtBeforeCheckpoint": "2026-11-11T04:24:02.086Z",
           "relevantGoalIdsBeforeCheckpoint": [
             "G001"
           ],
-          "requiredGoalSetHashBeforeCheckpoint": "654038ac51a08ec6b9173e7a829d358b93b28754e808143b2825f3ea5aa6cdb5"
+          "requiredGoalSetHashBeforeCheckpoint": "b436daf926863f68fa72fc4a475fd0e39ffa55dde9fbd04008ed60ed5891bfba"
         },
-        "checkpointLedgerEventId": "2111a0b8-82d0-49e4-8be0-0aabadcc5dcc"
+        "checkpointLedgerEventId": "d4356055-614e-4730-ba85-6182acefe3fc"
       }
     },
     {
       "id": "G002",
-      "title": "goal-3 win/lose and screen flow (R2-10..R2-17)",
-      "objective": "Implement per GAME_DESIGN.md v4 ch.2.2/3/7 and plan goal-3 part: screens title/play/clear/fail derived from state; Enter starts play (direction input in that frame discarded), timer starts at play entry; clear on last delivery (clear beats same-frame timeout); fail at 0; R restarts per ch.2.2/3 (ignored on title, ignores Ctrl/Meta+R); src/strings.js with the exact texts; bitmap glyphs for the 17 Korean chars, Enter letters and digits (Korean 12x12, Latin/digits 6x12), palette colors only. Human check items: R2-10..R2-17.",
-      "status": "complete",
-      "createdAt": "2026-11-11T02:09:26.920Z",
-      "updatedAt": "2026-11-11T02:56:21.301Z",
-      "startedAt": "2026-11-11T02:17:19.590Z",
-      "completedAt": "2026-11-11T02:56:21.301Z",
-      "evidence": "goal-3 done: human confirmed R2-10..R2-13, R2-15..R2-17 pass; R2-14 unit test + human approval of clear-before-timeout; boundary gate gen2 clean (cleaner/architect/QA), terminal critic OKAY; 31/31 tests",
-      "completionVerification": {
-        "schemaVersion": 1,
-        "receiptId": "8b6805a6-1081-4806-aa96-34b3bb9b0f32",
-        "verifiedAt": "2026-11-11T02:56:21.301Z",
-        "goalId": "G002",
-        "receiptKind": "final-aggregate",
-        "goalStatusBeforeCheckpoint": "active",
-        "gjcGoalMode": "aggregate",
-        "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
-        "qualityGateHash": "9e8f62f2512b70920f944be5211d9b9a4757e964bdcc19b75fda22bf05262738",
-        "planGeneration": "92588be5aa5083995a6ca8a5d8cdd98b6d7a9bd92342cc7ef3121abb7f812d69",
-        "basis": {
-          "planHashBeforeCheckpoint": "ee6b4c33ff637844ddad60f75783b7fbef328065e378e8619b461349577f259c",
-          "latestRelevantLedgerEventIdBeforeCheckpoint": "b3b2b600-7a5b-4693-8161-f4ab80fea548",
-          "goalUpdatedAtBeforeCheckpoint": "2026-11-11T02:56:21.301Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G001",
-            "G002"
-          ],
-          "requiredGoalSetHashBeforeCheckpoint": "d04d336f19db1144abb3fd001a80730bf130a7bdf271b3a960b46cb76fc2daf9"
-        },
-        "checkpointLedgerEventId": "48cf596b-82b8-4fc3-908c-76afd2cf534e"
-      }
+      "title": "goal-5 sound, score, best score, final screen (R3-10..R3-21)",
+      "objective": "Implement per GAME_DESIGN.md v5 ch.2.2/3/7/8/9: score = 100 x letters + 10 x timerDisplay at the clear frame; pure soundsOf(prev,next) in logic (no events field; deliver+clear/final -> clear/final only); src/audio.js Web Audio synthesis with injectable AudioContext, unlock synchronously in keydown, no audio files; src/storage.js single key snailPostman.bestScore with injectable storage, getter exceptions caught, save once on final transition, hide 최고 line on failure, no fake fallback; final screen (배달 완료 / 점수 N / 최고 B, no Enter hint, Enter ignored, R new run score 0); title shows 최고 N only when stored; new Hangul glyphs 점 수 최 고 12x12 palette 7 only; strings only in src/strings.js. Tests per plan section 10. Human check items: R3-10..R3-21.",
+      "status": "active",
+      "createdAt": "2026-11-11T03:46:21.464Z",
+      "updatedAt": "2026-11-11T04:24:02.114Z",
+      "startedAt": "2026-11-11T04:24:02.114Z"
     }
   ],
-  "createdAt": "2026-11-11T02:09:26.920Z",
-  "updatedAt": "2026-11-11T02:56:21.301Z",
+  "createdAt": "2026-11-11T03:46:21.464Z",
+  "updatedAt": "2026-11-11T04:24:02.114Z",
   "repositoryBinding": {
     "schema": "gjc.repository_binding.v1",
     "worktreeRoot": "/Users/seul/Desktop/dotgame-yongdam",
     "commonDir": "/Users/seul/Desktop/dotgame-yongdam/.git",
     "displayPath": "/Users/seul/Desktop/dotgame-yongdam",
-    "head": "dc72213619d052f61c9d5c31ab124221ae064d7e",
+    "head": "09e52f4344b20b8764f7d797fd0af198705c3fca",
     "branch": "main"
   },
-  "state_revision": 10
+  "state_revision": 14
 }
