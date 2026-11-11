@@ -1,10 +1,10 @@
 {
-  "active": true,
+  "active": false,
   "version": 2,
-  "current_phase": "active",
+  "current_phase": "complete",
   "skill": "ultragoal",
   "cwd": "/Users/seul/Desktop/dotgame-yongdam",
-  "updated_at": "2026-11-11T00:52:53.500Z",
+  "updated_at": "2026-11-11T01:15:34.178Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
@@ -13,33 +13,33 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-11T00:52:53.500Z",
-    "fresh_until": "2026-11-11T01:22:53.500Z",
+    "mutated_at": "2026-11-11T01:15:34.178Z",
+    "fresh_until": "2026-11-11T01:45:34.178Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-11T00:52:53.500Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-11T01:15:34.178Z",
     "verb": "reconcile",
-    "from_phase": "active",
-    "to_phase": "active",
+    "from_phase": "complete",
+    "to_phase": "complete",
     "forced": true,
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "764b1cf6b3e9bda1278a5ef4e374ede81421ccaf009aef180bea53deb1d8cb25",
+      "value": "d14891ebe4f7b9ba3a81f6cd1f1d70cae1f10cbe3688622006b91cbf0d2efcfd",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-      "computed_at": "2026-11-11T00:52:53.500Z"
+      "computed_at": "2026-11-11T01:15:34.178Z"
     }
   },
-  "status": "active",
+  "status": "complete",
   "goals": [
     {
       "id": "G001",
       "title": "# R1 계획 (개정 3) — 달팽이 우체부: 캐릭터가 맵 위를 한 칸씩 움직인다",
-      "status": "active"
+      "status": "complete"
     }
   ],
   "counts": {
     "pending": 0,
-    "active": 1,
-    "complete": 0,
+    "active": 0,
+    "complete": 1,
     "failed": 0,
     "blocked": 0,
     "review_blocked": 0,
@@ -53,13 +53,12 @@
   "nudge_count": 2,
   "nudge_remaining": 4,
   "nudge_goal_id": "G001",
-  "nudge_target_kind": "story",
+  "nudge_target_kind": "final_aggregate_receipt",
   "latestLedgerEvent": {
-    "event": "goal_checkpointed",
-    "goalId": "G001",
-    "timestamp": "2026-11-10T09:53:39.617Z",
-    "evidence": "reactivating G001 for completion checkpoint after gate gen3 joined clean"
+    "event": "steering_accepted",
+    "timestamp": "2026-11-11T01:15:34.163Z",
+    "kind": "annotate_ledger",
+    "evidence": "Human sign-off for GAME_DESIGN.md v3 (2.1.1 input model = keydown-event model; blocked priority winner does not fall through; previously held keys are not candidates) given by the user in-session: '서명한다' (2026-11-10 ~18:18 KST), recorded in commit 6d3bb25."
   },
-  "active_goal_id": "G001",
-  "state_revision": 19
+  "state_revision": 21
 }
