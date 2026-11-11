@@ -9,7 +9,7 @@ export const SOUNDS = {
   deliver: { type: "sine", freqs: [660, 880], ms: 80 },
   clear: { type: "triangle", freqs: [523, 659, 784], ms: 120 },
   final: { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 },
-  fail: { type: "square", freqs: [392, 294, 196], ms: 160 },
+  fail: { type: "sine", freqs: [392, 294, 196], ms: 160 },
 };
 
 // AudioContextCtor는 주입한다(브라우저에서는 window.AudioContext). 소리가 안 나도 게임은 계속된다.

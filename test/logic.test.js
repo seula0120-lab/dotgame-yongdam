@@ -656,7 +656,7 @@ test("효과음 합성값은 7장 표 그대로 (R3-13)", () => {
   assert.deepEqual(SOUNDS.deliver, { type: "sine", freqs: [660, 880], ms: 80 });
   assert.deepEqual(SOUNDS.clear, { type: "triangle", freqs: [523, 659, 784], ms: 120 });
   assert.deepEqual(SOUNDS.final, { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 });
-  assert.deepEqual(SOUNDS.fail, { type: "square", freqs: [392, 294, 196], ms: 160 });
+  assert.deepEqual(SOUNDS.fail, { type: "sine", freqs: [392, 294, 196], ms: 160 });
   assert.deepEqual(Object.keys(SOUNDS).sort(), ["clear", "deliver", "fail", "final", "push"]);
 });
 
