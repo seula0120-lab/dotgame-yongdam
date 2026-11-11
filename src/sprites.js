@@ -59,7 +59,7 @@ export const FENCE = sprite([
   "3333333333333333",
 ]);
 
-// 달팽이: 몸 7, 껍질 5, 윤곽선 0. 방향 표현 없음.
+// 달팽이: 몸 7, 껍질 5, 윤곽선 0. 이 그림은 오른쪽을 본다 (2.1.1 방향 표현).
 export const SNAIL = sprite([
   "................",
   "................",
@@ -78,6 +78,14 @@ export const SNAIL = sprite([
   "................",
   "................",
 ]);
+
+// 스프라이트를 좌우로 뒤집는다. 칸 안에서 열 순서만 바꾸므로 새 색이 생기지 않는다.
+export function mirrorX(sprite) {
+  return sprite.map((row) => [...row].reverse());
+}
+
+// 왼쪽 이동이 시작된 뒤의 달팽이: 같은 그림을 좌우로 뒤집은 것 (2.1.1).
+export const SNAIL_LEFT = mirrorX(SNAIL);
 
 // 편지: 몸 7, 윤곽선 0 (6장 R2 색 쓰임)
 export const LETTER = sprite([

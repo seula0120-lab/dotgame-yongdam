@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { LEVEL_1, LEVEL_1_TIME_MS, LEVELS } from "../src/levels.js";
-import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS } from "../src/sprites.js";
+import { PALETTE, FLOOR, WALL, FENCE, SNAIL, SNAIL_LEFT, mirrorX, LETTER, MAILBOX, DIGITS, GLYPHS } from "../src/sprites.js";
 import { STRINGS } from "../src/strings.js";
 import { SOUNDS, createAudio } from "../src/audio.js";
 import { BEST_KEY, readBest, saveBest } from "../src/storage.js";
@@ -134,7 +134,7 @@ test("WASD는 같은 방향의 방향키와 같다 (R1-1)", () => {
 
 test("스프라이트는 16x16이고 색은 6장 8색 인덱스뿐 (R1-4, R1-5)", () => {
   assert.equal(PALETTE.length, 8);
-  for (const sp of [FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX]) {
+  for (const sp of [FLOOR, WALL, FENCE, SNAIL, SNAIL_LEFT, LETTER, MAILBOX]) {
     assert.equal(sp.length, TILE);
     for (const row of sp) {
       assert.equal(row.length, TILE);
@@ -714,4 +714,136 @@ test("밀기 소리는 110Hz에서 55Hz로 40ms 내려가는 사인파 하나 (7
   assert.equal(o.type, "sine");
   assert.equal(o.frequency.value, 110);
   assert.deepEqual(o.sweep, [55, 10.04]);
+});
+
+// ---- R3 goal-6: 기대값은 GAME_DESIGN.md v6 (2.1.1 방향 표현, 9장 R3-22~R3-27) ----
+
+test("방향: 레벨 시작, 타이틀 Enter, 클리어 Enter는 오른쪽 (R3-22)", () => {
+  assert.equal(createState(LV[0], 0).facing, "right");
+  assert.equal(startGame(createTitleState(LV[0]), LV).facing, "right");
+  const cleared = presses(createState(LV[0], 0), LV[0], keysOf(1));
+  assert.equal(startGame(cleared, LV).facing, "right");
+});
+
+test("방향: 왼쪽 이동이 시작되면 왼쪽, 오른쪽 이동이 시작되면 오른쪽 (R3-23)", () => {
+  let s = tick(createState(LV[0], 0), LV[0], ["left"], 0);
+  assert.equal(s.facing, "left"); // 이동이 시작되는 프레임부터
+  s = run(s, LV[0], 600, 100);
+  assert.equal(s.move, null);
+  assert.equal(s.facing, "left"); // 도착한 뒤에도
+  s = tick(s, LV[0], ["right"], 0);
+  assert.equal(s.facing, "right");
+});
+
+test("방향: 위·아래 이동은 직전 좌우 방향을 유지한다 (R3-24)", () => {
+  const left = press(createState(LV[0], 0), LV[0], "left");
+  assert.equal(press(left, LV[0], "down").facing, "left");
+  assert.equal(press(press(left, LV[0], "down"), LV[0], "down").facing, "left");
+  assert.equal(press(createState(LV[0], 0), LV[0], "up").facing, "right");
+  assert.equal(press(createState(LV[0], 0), LV[0], "down").facing, "right");
+});
+
+test("방향: 막힌 입력은 방향을 바꾸지 않는다 (R3-25)", () => {
+  // 레벨 1: (4,4)에서 위로 (4,3)에 간 뒤 왼쪽 (3,3)은 울타리.
+  let s = press(createState(LV[0], 0), LV[0], "up");
+  const blocked = tick(s, LV[0], ["left"], 0);
+  assert.equal(blocked.move, null);
+  assert.equal(blocked.facing, "right");
+  // 왼쪽을 보는 상태에서 오른쪽이 울타리인 칸: (1,0)의 오른쪽 (2,0)이 F.
+  const lv = parseLevel(["..F.", "..S."], 30000);
+  s = press(createState(lv), lv, "left"); // (1,1), 왼쪽
+  s = press(s, lv, "up"); // (1,0), 왼쪽 유지
+  assert.equal(s.facing, "left");
+  const t = tick(s, lv, ["right"], 0);
+  assert.equal(t.move, null);
+  assert.equal(t.facing, "left");
+  // 뒤가 막힌 편지를 미는 입력: 왼쪽을 보는 상태에서 오른쪽 편지 뒤가 벽.
+  const lv2 = parseLevel([".SL#"], 30000);
+  const faceLeft = { ...createState(lv2), facing: "left" };
+  const pushBlocked = tick(faceLeft, lv2, ["right"], 0);
+  assert.equal(pushBlocked.move, null);
+  assert.equal(pushBlocked.facing, "left");
+});
+
+test("방향: 이동 중 입력은 방향을 바꾸지 않는다 (R3-25)", () => {
+  let s = tick(createState(LV[0], 0), LV[0], ["up"], 0);
+  s = tick(s, LV[0], ["left"], 100); // 이동 중 반대 입력은 무시
+  assert.equal(s.facing, "right");
+  s = run(s, LV[0], 600, 100);
+  assert.equal(s.facing, "right");
+  let l = tick(createState(LV[0], 0), LV[0], ["left"], 0);
+  l = tick(l, LV[0], ["left", "right"], 100);
+  assert.equal(l.facing, "left");
+  assert.equal(run(l, LV[0], 600, 100).facing, "left");
+});
+
+test("방향: 편지를 미는 이동도 이동이라 방향이 바뀐다. 위·아래 밀기는 유지", () => {
+  const right = parseLevel(["SL.."], 30000);
+  assert.equal(tick(createState(right), right, ["right"], 0).facing, "right");
+  const left = parseLevel(["..LS"], 30000);
+  const pl = tick({ ...createState(left), pos: { x: 3, y: 0 } }, left, ["left"], 0);
+  assert.equal(pl.move.push.index, 0);
+  assert.equal(pl.facing, "left");
+  const vert = parseLevel(["S", "L", "."], 30000);
+  const faceLeft = { ...createState(vert), facing: "left" };
+  const down = tick(faceLeft, vert, ["down"], 0);
+  assert.ok(down.move.push);
+  assert.equal(down.facing, "left");
+});
+
+test("방향: 동시 입력은 위, 아래, 왼쪽, 오른쪽 우선순위의 방향만 반영 (2.1.1)", () => {
+  const s = createState(LV[0], 0);
+  assert.equal(tick(s, LV[0], ["left", "up"], 0).facing, "right"); // 위가 우선, 방향 유지
+  const l = tick(s, LV[0], ["right", "left"], 0);
+  assert.equal(l.facing, "left"); // 왼쪽이 오른쪽보다 우선
+});
+
+test("방향: 시간 만료 실패 전이에서도 유지되고 리셋은 restart/startGame에서만 (R3-26)", () => {
+  const lv = parseLevel(["..S.", "...."], 700);
+  let s = tick(createState(lv), lv, ["left"], 0);
+  s = run(s, lv, 700, 100);
+  assert.equal(s.status, "lost");
+  assert.equal(s.facing, "left");
+  assert.equal(restart(s, [lv]).facing, "right");
+});
+
+test("방향: 플레이 중 R, 실패 후 R, 클리어 Enter, 최종 R은 오른쪽 (R3-26)", () => {
+  const left = press(createState(LV[0], 0), LV[0], "left");
+  assert.equal(restart(left, LV).facing, "right");
+  const failed = { ...run(createState(LV[1], 1), LV[1], 45000, 100), facing: "left" };
+  assert.equal(screenOf(failed), "fail");
+  assert.equal(restart(failed, LV).facing, "right");
+  const cleared = { ...presses(createState(LV[0], 0), LV[0], keysOf(1)), facing: "left" };
+  assert.equal(screenOf(cleared), "clear");
+  assert.equal(restart(cleared, LV), cleared); // 클리어에서 R은 같은 객체
+  assert.equal(startGame(cleared, LV).facing, "right");
+  const final = { ...presses(createState(LV[2], 2, 880), LV[2], keysOf(3)), facing: "left" };
+  assert.equal(screenOf(final), "final");
+  assert.equal(restart(final, LV).facing, "right");
+  assert.equal(startGame(final, LV), final);
+});
+
+test("왼쪽 그림은 오른쪽 그림을 좌우로만 뒤집은 것이다: 새 색 없음 (R3-27)", () => {
+  assert.deepEqual(mirrorX(mirrorX(SNAIL)), SNAIL); // 두 번 뒤집으면 원본
+  assert.notDeepEqual(SNAIL_LEFT, SNAIL); // 뒤집힌 것이 보인다
+  assert.equal(SNAIL_LEFT.length, 16);
+  for (const row of SNAIL_LEFT) assert.equal(row.length, 16);
+  const count = (sp) => {
+    const m = new Map();
+    for (const v of sp.flat()) m.set(v, (m.get(v) ?? 0) + 1);
+    return [...m].sort((a, b) => a[0] - b[0]);
+  };
+  assert.deepEqual(count(SNAIL_LEFT), count(SNAIL)); // 색별 픽셀 수 같음, 새 색 없음
+  const span = (sp) => {
+    const cols = sp.flatMap((row) => row.map((v, x) => (v >= 0 ? x : null)).filter((x) => x !== null));
+    return [Math.min(...cols), Math.max(...cols)];
+  };
+  assert.deepEqual(span(SNAIL_LEFT), span(SNAIL)); // 옆으로 밀려 보이지 않음 (1..14)
+  assert.deepEqual(span(SNAIL), [1, 14]);
+  // 오른쪽 그림의 더듬이(윤곽 색 0)는 (14,8),(14,9), 왼쪽 그림에서는 (1,8),(1,9).
+  assert.equal(SNAIL[8][14], 0);
+  assert.equal(SNAIL[9][14], 0);
+  assert.equal(SNAIL_LEFT[8][1], 0);
+  assert.equal(SNAIL_LEFT[9][1], 0);
+  assert.equal(SNAIL_LEFT[8][14], -1);
 });

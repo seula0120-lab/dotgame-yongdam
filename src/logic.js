@@ -69,6 +69,7 @@ export function createState(level, levelIndex = 0, score = 0) {
   return {
     levelIndex,
     score,
+    facing: "right", // 달팽이 방향: 레벨 시작과 R은 오른쪽 (2.1.1 방향 표현)
     pos: { ...level.start },
     move: null,
     letters: level.letters.map((l) => ({ ...l })),
@@ -161,7 +162,8 @@ export function tick(state, level, pressed, dtMs) {
     const dir = DIR_ORDER.find((d) => pressed.includes(d));
     if (dir) {
       const move = startMove(s, level, dir);
-      if (move) s = { ...s, move };
+      // 방향은 이동이 실제로 시작될 때만 바뀐다. 위·아래는 직전 좌우 방향 유지 (2.1.1).
+      if (move) s = { ...s, move, facing: dir === "left" || dir === "right" ? dir : s.facing };
     }
   }
 

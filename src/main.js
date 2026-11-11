@@ -2,7 +2,7 @@ import { LEVELS } from "./levels.js";
 import { STRINGS } from "./strings.js";
 import { createAudio } from "./audio.js";
 import { readBest, saveBest } from "./storage.js";
-import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS, GLYPH_W, GLYPH_H } from "./sprites.js";
+import { PALETTE, FLOOR, WALL, FENCE, SNAIL, SNAIL_LEFT, LETTER, MAILBOX, DIGITS, GLYPHS, GLYPH_W, GLYPH_H } from "./sprites.js";
 import {
   TILE,
   COLS,
@@ -115,7 +115,7 @@ function render(level) {
   }
   for (const l of letterPositions(state)) drawSprite(LETTER, l.x * TILE, l.y * TILE);
   const p = renderPos(state);
-  drawSprite(SNAIL, p.x * TILE, p.y * TILE);
+  drawSprite(state.facing === "left" ? SNAIL_LEFT : SNAIL, p.x * TILE, p.y * TILE);
   drawTimer();
 }
 
