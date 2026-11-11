@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LEVEL_1, LEVEL_1_TIME_MS } from "../src/levels.js";
+import { LEVEL_1, LEVEL_1_TIME_MS, LEVELS } from "../src/levels.js";
 import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS } from "../src/sprites.js";
 import { STRINGS } from "../src/strings.js";
 import {
@@ -282,11 +282,11 @@ test("처음에는 타이틀이고 시계도 입력도 멈춰 있다 (R2-10)", (
   const t = tick(s, L1, ["right"], 100);
   assert.equal(t, s);
   assert.equal(t.remainingMs, 30000);
-  assert.equal(restart(s, L1), s); // 타이틀에서 R은 아무 일도 없다
+  assert.equal(restart(s, [L1]), s); // 타이틀에서 R은 아무 일도 없다
 });
 
 test("Enter로 플레이 시작, 시계는 그 뒤부터 (R2-11)", () => {
-  const s = startGame(createTitleState(L1), L1);
+  const s = startGame(createTitleState(L1), [L1]);
   assert.equal(screenOf(s), "play");
   assert.equal(s.remainingMs, 30000);
   assert.equal(tick(s, L1, [], 100).remainingMs, 29900);
@@ -294,29 +294,29 @@ test("Enter로 플레이 시작, 시계는 그 뒤부터 (R2-11)", () => {
 
 test("클리어 화면과 실패 화면 (R2-12, R2-13)", () => {
   const lv = parseLevel(["SLM."], 30000);
-  let s = press(startGame(createTitleState(lv), lv), lv, "right");
+  let s = press(startGame(createTitleState(lv), [lv]), lv, "right");
   assert.equal(screenOf(s), "clear");
   const lv2 = parseLevel(["SLM."], 300);
-  s = run(startGame(createTitleState(lv2), lv2), lv2, 300, 100);
+  s = run(startGame(createTitleState(lv2), [lv2]), lv2, 300, 100);
   assert.equal(screenOf(s), "fail");
-  const mid = run(startGame(createTitleState(lv2), lv2), lv2, 200, 100);
+  const mid = run(startGame(createTitleState(lv2), [lv2]), lv2, 200, 100);
   assert.equal(screenOf(mid), "play");
 });
 
 test("플레이 중 R: 처음 상태로, 이동 중이어도 (R2-15)", () => {
-  let s = startGame(createTitleState(L1), L1);
+  let s = startGame(createTitleState(L1), [L1]);
   s = tick(s, L1, ["right"], 0);
   s = run(s, L1, 300, 100);
-  s = restart(s, L1);
-  assert.deepEqual(s, startGame(createTitleState(L1), L1));
+  s = restart(s, [L1]);
+  assert.deepEqual(s, startGame(createTitleState(L1), [L1]));
   assert.equal(s.remainingMs, 30000);
 });
 
 test("클리어/실패 화면에서 R은 플레이로 다시 시작, Enter는 무시 (R2-16, 3장)", () => {
   const lv = parseLevel(["SLM."], 300);
-  const failed = run(startGame(createTitleState(lv), lv), lv, 300, 100);
-  assert.equal(startGame(failed, lv), failed);
-  const again = restart(failed, lv);
+  const failed = run(startGame(createTitleState(lv), [lv]), lv, 300, 100);
+  assert.equal(startGame(failed, [lv]), failed);
+  const again = restart(failed, [lv]);
   assert.equal(screenOf(again), "play");
   assert.equal(again.remainingMs, 300);
 });
@@ -343,4 +343,156 @@ test("문구는 기획서 7장 그대로", () => {
   assert.equal(STRINGS.startHint, "Enter로 시작");
   assert.equal(STRINGS.clear, "배달 완료");
   assert.equal(STRINGS.fail, "해가 졌어요");
+});
+
+// ---- R3 goal-4: 기대값은 GAME_DESIGN.md v5 (3장, 5장 레벨 2·3, 9장 R3-1~R3-9) ----
+
+const LV = LEVELS.map((l) => parseLevel(l.grid, l.timeMs));
+const KEY = { u: "up", d: "down", l: "left", r: "right" };
+const SOLUTION = {
+  1: "rrrrrrrdddruu", // 5장 레벨 1, 13칸
+  2: "dddrrrrrrrrdruuullllllulurrrrrrurd", // 5장, 34칸
+  3: "rrdddldrrddrrrrrrdruulllllllurrrrrruuuuurdddd", // 5장, 45칸
+};
+
+function charPositions(rows, ch) {
+  const out = [];
+  rows.forEach((r, y) => [...r].forEach((c, x) => c === ch && out.push({ x, y })));
+  return out;
+}
+
+test("레벨 개수와 제한 시간: 3개, 30/45/60초 (5장, R3-2)", () => {
+  assert.equal(LEVELS.length, 3);
+  assert.deepEqual(LV.map((l) => l.timeLimitMs), [30000, 45000, 60000]);
+  LV.forEach((l, i) => assert.equal(createState(l, i).remainingMs, l.timeLimitMs));
+});
+
+test("레벨 2: 시작, 편지, 우편함, 울타리, 벽 좌표 (5장, R3-8)", () => {
+  const l = LV[1];
+  assert.deepEqual(l.start, { x: 2, y: 4 });
+  assert.deepEqual(l.letters, [{ x: 5, y: 4 }, { x: 4, y: 7 }]);
+  assert.deepEqual(charPositions(l.rows, "M"), [{ x: 11, y: 4 }]);
+  assert.deepEqual(charPositions(l.rows, "F"), [{ x: 8, y: 4 }]);
+  assert.deepEqual(charPositions(l.rows, "#").filter((p) => p.x > 0 && p.x < 15 && p.y > 0 && p.y < 11), [
+    { x: 7, y: 9 },
+    { x: 8, y: 9 },
+  ]);
+  assert.equal(l.rows.length, 12);
+  assert.ok(l.rows.every((r) => r.length === 16));
+});
+
+test("레벨 3: 시작, 편지, 우편함, 울타리, 벽 좌표 (5장, R3-8)", () => {
+  const l = LV[2];
+  assert.deepEqual(l.start, { x: 2, y: 2 });
+  assert.deepEqual(l.letters, [{ x: 12, y: 2 }, { x: 4, y: 3 }, { x: 6, y: 8 }]);
+  assert.deepEqual(charPositions(l.rows, "M"), [{ x: 12, y: 6 }]);
+  assert.deepEqual(charPositions(l.rows, "F"), [{ x: 8, y: 3 }, { x: 8, y: 4 }, { x: 6, y: 9 }]);
+  assert.deepEqual(charPositions(l.rows, "#").filter((p) => p.x > 0 && p.x < 15 && p.y > 0 && p.y < 11), [
+    { x: 9, y: 9 },
+    { x: 10, y: 9 },
+  ]);
+  assert.equal(l.rows.length, 12);
+  assert.ok(l.rows.every((r) => r.length === 16));
+});
+
+test("풀이 재생: 레벨 1·2·3 모두 편지를 전부 배달하고 클리어, 남은 시간 22300/24700/33100ms (5장, R3-4)", () => {
+  const expectMs = { 1: 22300, 2: 24700, 3: 33100 };
+  const moves = { 1: 13, 2: 34, 3: 45 };
+  for (const n of [1, 2, 3]) {
+    const keys = [...SOLUTION[n]].map((c) => KEY[c]);
+    assert.equal(keys.length, moves[n]);
+    const lv = LV[n - 1];
+    const s = presses(createState(lv, n - 1), lv, keys);
+    assert.equal(s.status, "won", `레벨 ${n}`);
+    assert.equal(s.letters.length, 0);
+    assert.equal(s.delivered, lv.letters.length);
+    assert.equal(s.remainingMs, expectMs[n]);
+    assert.equal(expectMs[n], lv.timeLimitMs - (keys.length * 600 - 100));
+  }
+});
+
+test("Enter: 타이틀은 레벨 1, 클리어(레벨 1·2)는 다음 레벨 처음 상태 (R3-1, R3-2)", () => {
+  let s = startGame(createTitleState(LV[0]), LV);
+  assert.equal(s.levelIndex, 0);
+  s = presses(s, LV[0], [...SOLUTION[1]].map((c) => KEY[c]));
+  assert.equal(screenOf(s), "clear");
+  s = startGame(s, LV);
+  assert.equal(screenOf(s), "play");
+  assert.equal(s.levelIndex, 1);
+  assert.deepEqual(s.pos, { x: 2, y: 4 });
+  assert.equal(s.letters.length, 2);
+  assert.equal(timerDisplay(s), 45);
+  assert.equal(tick(s, LV[1], [], 100).remainingMs, 44900);
+  s = presses(s, LV[1], [...SOLUTION[2]].map((c) => KEY[c]));
+  assert.equal(screenOf(s), "clear");
+  s = startGame(s, LV);
+  assert.equal(s.levelIndex, 2);
+  assert.deepEqual(s.pos, { x: 2, y: 2 });
+  assert.equal(timerDisplay(s), 60);
+});
+
+test("클리어 화면에서는 시간이 흐르지 않고 방향키와 R은 아무 일도 없다 (R3-2, R3-3)", () => {
+  const s = presses(createState(LV[0], 0), LV[0], [...SOLUTION[1]].map((c) => KEY[c]));
+  assert.equal(screenOf(s), "clear");
+  assert.equal(tick(s, LV[0], [], 100), s);
+  assert.equal(tick(s, LV[0], ["right"], 100), s);
+  assert.equal(restart(s, LV), s);
+});
+
+test("Enter는 타이틀·클리어 밖에서는 같은 객체를 돌려준다 (3장)", () => {
+  const playing = createState(LV[1], 1);
+  assert.equal(startGame(playing, LV), playing);
+  const failed = run(createState(LV[1], 1), LV[1], 45000, 100);
+  assert.equal(screenOf(failed), "fail");
+  assert.equal(startGame(failed, LV), failed);
+});
+
+test("실패 후 R: 실패한 그 레벨을 그 레벨 타이머로 다시 시작, 레벨 1로 가지 않는다 (R3-5)", () => {
+  for (const i of [1, 2]) {
+    const failed = run(createState(LV[i], i), LV[i], LV[i].timeLimitMs, 100);
+    assert.equal(screenOf(failed), "fail");
+    assert.equal(timerDisplay(failed), 0);
+    const again = restart(failed, LV);
+    assert.equal(screenOf(again), "play");
+    assert.equal(again.levelIndex, i);
+    assert.equal(again.remainingMs, LV[i].timeLimitMs);
+    assert.deepEqual(again.pos, LV[i].start);
+  }
+});
+
+test("플레이 중 R: 지금 레벨만 처음 상태로, 레벨 1로 가지 않는다 (R3-7)", () => {
+  let s = createState(LV[2], 2);
+  s = tick(s, LV[2], ["right"], 0);
+  s = run(s, LV[2], 300, 100);
+  const r = restart(s, LV);
+  assert.equal(r.levelIndex, 2);
+  assert.deepEqual(r, createState(LV[2], 2));
+  assert.equal(r.remainingMs, 60000);
+});
+
+test("(goal-4 임시) 레벨 3 클리어: Enter는 같은 객체, R은 레벨 1 처음부터 (R3-6)", () => {
+  const s = presses(createState(LV[2], 2), LV[2], [...SOLUTION[3]].map((c) => KEY[c]));
+  assert.equal(screenOf(s), "clear");
+  assert.equal(startGame(s, LV), s);
+  const r = restart(s, LV);
+  assert.equal(r.levelIndex, 0);
+  assert.equal(r.remainingMs, 30000);
+  assert.equal(screenOf(r), "play");
+});
+
+test("레벨 2·3에서도 밀기와 막힘 규칙이 같다 (R3-9)", () => {
+  // 레벨 2: 시작 (2,4)에서 오른쪽 두 칸이면 편지(5,4)를 만난다. 울타리(8,4) 앞에서 막힌다.
+  const l2 = LV[1];
+  let s = presses(createState(l2, 1), l2, ["right", "right", "right"]); // (5,4) 편지를 (6,4)로
+  assert.deepEqual(s.pos, { x: 5, y: 4 });
+  assert.deepEqual(s.letters[0], { x: 6, y: 4 });
+  s = presses(s, l2, ["right"]); // 편지 (7,4)
+  assert.deepEqual(s.letters[0], { x: 7, y: 4 });
+  const blocked = tick(s, l2, ["right"], 0); // 편지 뒤가 울타리 (8,4)
+  assert.equal(blocked.move, null);
+  // 레벨 3: 시작 (2,2)에서 위로 두 번은 벽(가장자리)에 막힌다.
+  const l3 = LV[2];
+  s = press(createState(l3, 2), l3, "up");
+  assert.deepEqual(s.pos, { x: 2, y: 1 });
+  assert.equal(tick(s, l3, ["up"], 0).move, null);
 });

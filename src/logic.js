@@ -61,8 +61,10 @@ export function isWalkable(level, x, y) {
   return tileAt(level, x, y) === ".";
 }
 
-export function createState(level) {
+// levelIndex: 0부터 시작하는 레벨 번호 (5장 레벨 1, 2, 3).
+export function createState(level, levelIndex = 0) {
   return {
+    levelIndex,
     pos: { ...level.start },
     move: null,
     letters: level.letters.map((l) => ({ ...l })),
@@ -86,14 +88,29 @@ export function screenOf(state) {
   return "play";
 }
 
-// 타이틀에서 Enter: 플레이 시작 (레벨 1 처음 상태). 그 밖의 화면에서는 아무 일도 없다 (3장).
-export function startGame(state, level) {
-  return state.started ? state : createState(level);
+// 마지막 레벨의 클리어인가. levels는 파싱된 레벨 배열.
+function isLastLevel(state, levels) {
+  return state.levelIndex === levels.length - 1;
 }
 
-// R: 타이틀에서는 아무 일도 없고, 플레이/클리어/실패에서는 처음 상태로 다시 시작 (2.2, 3장).
-export function restart(state, level) {
-  return state.started ? createState(level) : state;
+// Enter (3장): 타이틀에서는 레벨 1 시작, 클리어(레벨 1·2)에서는 다음 레벨 시작.
+// 그 밖의 화면에서는 아무 일도 없다(같은 객체를 돌려준다).
+export function startGame(state, levels) {
+  if (!state.started) return createState(levels[0], 0);
+  if (state.status === "won" && !isLastLevel(state, levels)) {
+    return createState(levels[state.levelIndex + 1], state.levelIndex + 1);
+  }
+  return state;
+}
+
+// R (3장): 타이틀과 클리어(레벨 1·2)에서는 아무 일도 없다(같은 객체).
+// 플레이와 실패에서는 지금 레벨을 처음 상태로. 마지막 레벨 클리어(goal-4 임시)에서는 레벨 1부터.
+export function restart(state, levels) {
+  if (!state.started) return state;
+  if (state.status === "won") {
+    return isLastLevel(state, levels) ? createState(levels[0], 0) : state;
+  }
+  return createState(levels[state.levelIndex], state.levelIndex);
 }
 
 function letterIndexAt(state, x, y) {

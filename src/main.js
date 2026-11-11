@@ -1,4 +1,4 @@
-import { LEVEL_1, LEVEL_1_TIME_MS } from "./levels.js";
+import { LEVELS } from "./levels.js";
 import { STRINGS } from "./strings.js";
 import { PALETTE, FLOOR, WALL, FENCE, SNAIL, LETTER, MAILBOX, DIGITS, GLYPHS, GLYPH_W, GLYPH_H } from "./sprites.js";
 import {
@@ -18,8 +18,8 @@ import {
   timerDisplay,
 } from "./logic.js";
 
-const level = parseLevel(LEVEL_1, LEVEL_1_TIME_MS);
-let state = createTitleState(level);
+const levels = LEVELS.map((l) => parseLevel(l.grid, l.timeMs));
+let state = createTitleState(levels[0]);
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -73,10 +73,14 @@ function renderTextScreen(lines) {
   lines.forEach((t, i) => drawText(t, top + i * 16));
 }
 
-function render() {
+function render(level) {
   const screen = screenOf(state);
   if (screen === "title") return renderTextScreen([STRINGS.title, STRINGS.startHint]);
-  if (screen === "clear") return renderTextScreen([STRINGS.clear]);
+  if (screen === "clear") {
+    // 레벨 3 클리어는 goal-4 임시 화면: Enter로 시작 줄이 없다 (9장 R3-6).
+    const last = state.levelIndex === levels.length - 1;
+    return renderTextScreen(last ? [STRINGS.clear] : [STRINGS.clear, STRINGS.startHint]);
+  }
   if (screen === "fail") return renderTextScreen([STRINGS.fail]);
   ctx.fillStyle = PALETTE[3];
   ctx.fillRect(0, 0, COLS * TILE, ROWS * TILE);
@@ -112,11 +116,12 @@ function frame(now) {
   last = now;
   // Enter/R이 실제로 상태를 바꾼 프레임에서만 tick을 건너뛰고 방향 입력을 버린다 (2.2).
   const next =
-    action === "start" ? startGame(state, level) : action === "restart" ? restart(state, level) : state;
+    action === "start" ? startGame(state, levels) : action === "restart" ? restart(state, levels) : state;
+  const level = levels[next.levelIndex];
   state = next !== state ? next : tick(state, level, pressed, dt);
   action = null;
   pressed = [];
-  render();
+  render(level);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
