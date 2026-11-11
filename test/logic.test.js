@@ -847,3 +847,14 @@ test("왼쪽 그림은 오른쪽 그림을 좌우로만 뒤집은 것이다: 새
   assert.equal(SNAIL_LEFT[9][1], 0);
   assert.equal(SNAIL_LEFT[8][14], -1);
 });
+
+test("글리프 졌: ㅕ 모양, 줄기 왼쪽에 짧은 획이 두 개 있고 오른쪽에는 없다 (7장 문구 `해가 졌어요`)", () => {
+  const g = GLYPHS["졌"];
+  const stem = 9; // 세로 줄기 열
+  for (const y of [2, 5]) {
+    assert.equal(g[y][stem], 7);
+    assert.equal(g[y][stem - 1], 7, `y=${y} 왼쪽 획`);
+    assert.equal(g[y][stem + 1], -1, `y=${y} 오른쪽에는 획 없음`);
+  }
+  for (const y of [3, 4]) assert.equal(g[y][stem - 1], -1);
+});
