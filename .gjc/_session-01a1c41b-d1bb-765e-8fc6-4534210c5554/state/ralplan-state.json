@@ -1,53 +1,58 @@
 {
-  "active": true,
-  "current_phase": "final",
   "skill": "ralplan",
+  "active": false,
   "version": 2,
-  "mode": "short",
-  "interactive": false,
-  "task": "goal-1 사람 확인에서 file:// 더블클릭 빈 화면. GAME_DESIGN.md 8장·9장 R1 항목만 고치는 계획(AGENTS.md 수정 금지, 코드 수정 금지)",
-  "run_id": "r1-fileurl",
-  "updated_at": "2026-11-10T08:43:25.081Z",
+  "current_phase": "complete",
+  "cwd": "/Users/seul/Desktop/dotgame-yongdam",
+  "updated_at": "2026-11-11T02:09:08.684Z",
+  "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "repository_binding": {
     "schema": "gjc.repository_binding.v1",
     "worktreeRoot": "/Users/seul/Desktop/dotgame-yongdam",
     "commonDir": "/Users/seul/Desktop/dotgame-yongdam/.git",
     "displayPath": "/Users/seul/Desktop/dotgame-yongdam",
-    "head": "4d867978714f4fd884af539c6ede369c57e02801",
+    "head": "b48e39b2c52bca7af670bdc42702b1d8ca99a655",
     "branch": "main"
   },
-  "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
     "skill": "ralplan",
-    "owner": "gjc-runtime",
-    "command": "gjc ralplan final-admission",
+    "owner": "gjc-state-cli",
+    "command": "gjc state ralplan clear",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ralplan-state.json",
-    "mutated_at": "2026-11-10T08:43:25.081Z",
-    "fresh_until": "2026-11-10T09:13:25.081Z",
+    "mutated_at": "2026-11-11T02:09:08.684Z",
+    "fresh_until": "2026-11-11T02:39:08.684Z",
     "status": "fresh",
-    "mutation_id": "ralplan:2026-11-10T08:43:25.081Z",
+    "mutation_id": "ralplan:clear:2026-11-11T02:09:08.684Z",
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "dcb875557b1faa4629348957cace7a0f8fb50ad568c25336187c5e90fc7b175d",
+      "value": "4c1e59c7ec68cd4ae91107bbd580ef32976c6e195c907883ae31abc7432e11d1",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ralplan-state.json",
-      "computed_at": "2026-11-10T08:43:25.081Z"
+      "computed_at": "2026-11-11T02:09:08.684Z"
     }
   },
-  "planner_subagent_id": "4-PlannerFileUrl",
+  "run_id": "r2-plan",
+  "planner_subagent_id": "24-PlannerR2",
   "planner_resumable": true,
-  "critic_id": "6-CriticFileUrl",
+  "critic_id": "26-CriticR2",
   "critic_resumable": true,
   "last_review_verdict": "OKAY",
   "last_review_verdict_lane": "critic",
-  "last_review_verdict_stage_n": 7,
-  "architect_id": "5-ArchFileUrl",
+  "last_review_verdict_stage_n": 2,
+  "architect_id": "25-ArchR2",
   "architect_resumable": true,
   "auto_handoff": {
     "configuredTarget": "off",
     "effectiveTarget": "off",
     "degradationReason": null,
     "source": "default"
-  }
+  },
+  "final_admission_phase_transition": {
+    "run_id": "r2-plan",
+    "final_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/plans/ralplan/r2-plan/stage-03-final.md",
+    "final_sha256": "29f8585ccb3418e22fd8b0be5691447b651bf703803e944575bda2a360775122",
+    "auto_handoff_sha256": "baf1bde06b9be0458d9d81bf55e067158d2cf07d30b198d609a3dec519b416b1"
+  },
+  "state_revision": 4
 }
