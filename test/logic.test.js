@@ -652,7 +652,7 @@ function fakeAudioCtor(state = "running") {
 }
 
 test("효과음 합성값은 7장 표 그대로 (R3-13)", () => {
-  assert.deepEqual(SOUNDS.push, { type: "square", freqs: [140], ms: 60 });
+  assert.deepEqual(SOUNDS.push, { type: "sine", freqs: [220], ms: 50 });
   assert.deepEqual(SOUNDS.deliver, { type: "sine", freqs: [660, 880], ms: 80 });
   assert.deepEqual(SOUNDS.clear, { type: "triangle", freqs: [523, 659, 784], ms: 120 });
   assert.deepEqual(SOUNDS.final, { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 });

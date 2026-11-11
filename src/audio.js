@@ -5,7 +5,7 @@ const RAMP_S = 0.005;
 
 // freqs의 각 음을 ms 길이로 이어서 낸다.
 export const SOUNDS = {
-  push: { type: "square", freqs: [140], ms: 60 },
+  push: { type: "sine", freqs: [220], ms: 50 },
   deliver: { type: "sine", freqs: [660, 880], ms: 80 },
   clear: { type: "triangle", freqs: [523, 659, 784], ms: 120 },
   final: { type: "triangle", freqs: [523, 659, 784, 1047], ms: 140 },
