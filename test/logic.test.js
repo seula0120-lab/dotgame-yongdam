@@ -93,8 +93,7 @@ test("벽 쪽 입력은 이동하지 않는다 (R1-2)", () => {
   const lv = parseLevel(["S#"]);
   assert.equal(tick(createState(lv), lv, ["right"], 0).move, null);
   // 레벨 1: (1,1)에서 위 (1,0)는 바깥 테두리 벽
-  let s = createState(level1);
-  s = { pos: { x: 1, y: 1 }, move: null };
+  const s = { ...createState(level1), pos: { x: 1, y: 1 } };
   assert.equal(tick(s, level1, ["up"], 0).move, null);
 });
 

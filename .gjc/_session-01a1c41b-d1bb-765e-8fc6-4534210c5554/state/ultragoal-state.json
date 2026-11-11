@@ -4,7 +4,7 @@
   "current_phase": "active",
   "skill": "ultragoal",
   "cwd": "/Users/seul/Desktop/dotgame-yongdam",
-  "updated_at": "2026-11-11T02:24:44.611Z",
+  "updated_at": "2026-11-11T02:42:50.433Z",
   "session_id": "01a1c41b-d1bb-765e-8fc6-4534210c5554",
   "receipt": {
     "version": 1,
@@ -13,19 +13,19 @@
     "command": "gjc ultragoal (reconcile)",
     "state_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/skill-active-state.json",
     "storage_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-    "mutated_at": "2026-11-11T02:24:44.611Z",
-    "fresh_until": "2026-11-11T02:54:44.611Z",
+    "mutated_at": "2026-11-11T02:42:50.433Z",
+    "fresh_until": "2026-11-11T03:12:50.433Z",
     "status": "fresh",
-    "mutation_id": "ultragoal:reconcile:2026-11-11T02:24:44.611Z",
+    "mutation_id": "ultragoal:reconcile:2026-11-11T02:42:50.433Z",
     "verb": "reconcile",
     "from_phase": "active",
     "to_phase": "active",
     "forced": true,
     "content_sha256": {
       "algorithm": "sha256",
-      "value": "e833d33d1ef2677804566d68a17cc508be4c9cfcc743f19f0c7f127eac526fe1",
+      "value": "51aa5b2557292c39e52e5ff71943140adb2aa4be2ee87bd125e487dc30b48edf",
       "covered_path": "/Users/seul/Desktop/dotgame-yongdam/.gjc/_session-01a1c41b-d1bb-765e-8fc6-4534210c5554/state/ultragoal-state.json",
-      "computed_at": "2026-11-11T02:24:44.611Z"
+      "computed_at": "2026-11-11T02:42:50.433Z"
     }
   },
   "status": "active",
@@ -66,5 +66,5 @@
     "evidence": "Human browser check of goal-3 (2026-11-11): R2-10..R2-13, R2-15..R2-17 pass; R2-14 confirmed by unit test and human approved clear-before-timeout decision. Human glyph-shape comment was an unfilled template placeholder, so no comment recorded."
   },
   "active_goal_id": "G002",
-  "state_revision": 38
+  "state_revision": 39
 }

@@ -53,7 +53,7 @@ function drawSprite(sprite, px, py) {
   }
 }
 
-// 글자 그리기: 비트맵 글리프, 글자 사이 1픽셀, 띄어쓰기는 6픽셀 빈 칸 (7장).
+// 글자 그리기: 비트맵 글리프, 글자 사이 1픽셀, 띄어쓰기는 6픽셀 빈 칸.
 function textWidth(str) {
   return [...str].reduce((w, c) => w + (c === " " ? GLYPH_W : GLYPHS[c][0].length) + 1, -1);
 }
@@ -110,9 +110,10 @@ let last = null;
 function frame(now) {
   const dt = last === null ? 0 : now - last;
   last = now;
-  if (action === "start") state = startGame(state, level);
-  else if (action === "restart") state = restart(state, level);
-  else state = tick(state, level, pressed, dt);
+  // Enter/R이 실제로 상태를 바꾼 프레임에서만 tick을 건너뛰고 방향 입력을 버린다 (2.2).
+  const next =
+    action === "start" ? startGame(state, level) : action === "restart" ? restart(state, level) : state;
+  state = next !== state ? next : tick(state, level, pressed, dt);
   action = null;
   pressed = [];
   render();
